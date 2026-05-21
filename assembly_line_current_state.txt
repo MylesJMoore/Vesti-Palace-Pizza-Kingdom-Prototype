@@ -1,0 +1,261 @@
+ASSEMBLY LINE - CURRENT STATE DOCUMENTATION
+===========================================
+Documented: 2026-05-19
+Purpose: Snapshot before pivoting to a new approach
+
+
+OVERVIEW
+--------
+The assembly line is a physics-based, paint-and-stamp pizza construction system.
+The player drags ingredients onto a pizza using a unified cursor object (oHand),
+painting sauces/cheese and stamping discrete toppings. A grid tracks coverage.
+Pizzas go into an oven, cook on a timer, then are scored.
+
+
+ARCHITECTURE SUMMARY
+--------------------
+Four main layers:
+
+  1. Data layer    - Pizza struct + grid arrays (pure data, no object)
+  2. Logic layer   - Script functions that mutate pizza data
+  3. Object layer  - oAssemblyTable, oPizza, oOvenStation, oCondimentTub, oHand
+  4. Constants     - Pizza_Constants.gml (enums: PIZZA_COOK, INGREDIENT, HAND_MODE)
+
+
+PIZZA DATA MODEL
+----------------
+Pizza is stored as a struct on oPizza:
+
+  cook_state         int           PIZZA_COOK enum (UNCOOKED=0, COOKED=1, BURNT=2)
+  grid_cell          12            pixels per grid cell
+  pizza_radius_px    140           pixels
+  grid_inside[]      ds_grid       1 where cell is inside circular pizza, 0 outside
+  grid_sauce[]       ds_grid       1 where sauce has been painted
+  grid_cheese[]      ds_grid       1 where cheese has been painted
+  toppings           ds_list       list of topping structs (see below)
+  metrics            struct        {start_time_ms, actions, waste_paints, waste_toppings, mistakes}
+
+Topping struct: { type, x, y, cook_state, variant }
+  variant: mushroom 0-1, glass 0-7, pepperoni always 0
+
+Grid dimensions: floor((pizza_radius_px * 2) / grid_cell) = 23x23 cells
+Coverage = filled_cells / inside_cells  (0.0 to 1.0)
+
+
+PAINTING MECHANIC
+-----------------
+Trigger: left mouse held, global.hand_mode == HAND_MODE.PAINT, pizza is on table
+
+For sauce/cheese:
+  Pizza_PaintGrid(pizza, px, py, radius_px, ingredient_type)
+  - Converts world coords to grid coords
+  - Applies circular brush of radius_px
+  - Marks grid_sauce or grid_cheese cells = 1
+  - Increments pizza.metrics.waste_paints for cells outside pizza circle
+  - Recalculates coverage via Pizza_CoverageFromGrid
+
+For pepperoni/mushroom/glass:
+  Pizza_StampTopping(pizza, px, py, stamp_spacing_px, ingredient_type, pizza_center_x/y, pizza_radius_px)
+  - Checks PointInPizza (circle distance test)
+  - Enforces minimum spacing between stamps (stamp_spacing_px = 18)
+  - Creates topping struct, randomizes variant
+  - Appends to pizza.toppings ds_list
+  - Increments waste_toppings if outside pizza
+
+Parameters (set on oAssemblyTable):
+  pizza_radius_px   = 140
+  paint_radius_px   = 22   (brush size)
+  stamp_spacing_px  = 18   (minimum distance between toppings)
+  table_width       = 800
+  table_height      = 120
+
+
+INGREDIENT SELECTION
+---------------------
+Clicking a tub (oTub_Sauce, oTub_Cheese, etc.) fires Tub_OnClicked:
+  - Toggle: clicking same ingredient deselects -> INGREDIENT.NONE, HAND_MODE.GRAB
+  - Clicking different ingredient -> selects it, HAND_MODE.PAINT
+  - Updates oAssemblyTable.active_ingredient and global.hand_mode
+Right-click always cancels paint mode and returns to GRAB.
+
+
+COOKING MECHANIC
+-----------------
+oOvenStation tracks time with current_time:
+  < 6000ms    -> UNCOOKED
+  6000-11999ms -> COOKED
+  >= 12000ms  -> BURNT
+
+Player interaction (Mouse_4 / left click on oven):
+  - If empty: takes pizza from oAssemblyTable, starts timer, calls Pizza_ClearAndNew() on table
+  - If has pizza: returns pizza to table
+
+Pizza_ClearAndNew():
+  - Destroys toppings ds_list on old pizza
+  - Creates new pizza struct via Pizza_Create()
+  - Re-inits grids via Pizza_GridInitForTable(table)
+  - Resets active_ingredient = INGREDIENT.NONE
+
+
+INTERACTION SYSTEM (oHand)
+---------------------------
+Single cursor object replaces system cursor. Always depth -100000.
+
+States:
+  cursor_state 0 = default
+  cursor_state 1 = hover
+  cursor_state 2 = click
+
+Dragging physics (applied while holding):
+  drag_strength    = 0.22    (follow speed; lower = heavier)
+  max_speed        = 26      (velocity cap)
+  slide            = 0.93    (coasting dampening)
+  drag_friction_x/y = 0.84  (held dampening)
+  wiggle: image_angle = sin(current_time/90 + wiggle_phase) * 2
+
+drag_bounds_mode on oInteractable:
+  0 = no clamping
+  1 = counter bounds (global.counter_min/max x/y)
+  2 = full room bounds
+
+Tubs are click-only (can_be_clicked=true, can_be_picked_up=false).
+Pizzas are draggable (can_be_picked_up=true, drag_bounds_mode=2).
+
+
+SCORING SYSTEM (Pizza_FinalizeScore)
+--------------------------------------
+Called when pizza is submitted. Returns a SLICE score 0-100 and rank.
+
+Accuracy score (0-100 base):
+  Sauce:  ideal coverage = 80%, ±12% tolerance, up to -40 penalty on deviation
+          No sauce required but has >5%: -15 penalty
+  Cheese: ideal coverage = 85%, ±12% tolerance, up to -40 penalty on deviation
+          No cheese required but has >5%: -15 penalty
+
+Cook state penalties:
+  BURNT:    -35
+  UNCOOKED: -20
+
+Waste penalty:
+  (waste_paints + waste_toppings) * 0.02, capped at -20
+
+Speed score (0-100):
+  Full marks at <= 15 seconds
+  -20 points per 6 seconds beyond 15s
+  Minimum 40 (never goes below 40)
+
+Final: SLICE = (accuracy * 0.7) + (speed * 0.3)
+
+Ranks:
+  F: 0-59
+  C: 60-69
+  B: 70-79
+  A: 80-89
+  S: 90-96
+  S+: 97-100
+
+Order requirements are passed in as a parameter struct (not yet fully wired up).
+
+
+RENDERING (oPizza Draw_0.gml)
+------------------------------
+Draw order:
+  1. Drop shadow (when held, offset +4/+6, alpha 0.35, black)
+  2. Base sprite (uncooked/cooked/burnt variant)
+  3. Sauce layer (drawn if sauce_coverage > 5%)
+  4. Cheese layer (drawn if cheese_coverage > 5%)
+  5. Toppings from ds_list:
+       Pepperoni: 1 sprite variant, cook-state dependent
+       Mushroom:  2 variants (left/right), cook-state dependent
+       Glass:     8 variants, cook-state dependent
+
+No actual grid overlay rendered in final draw -- debug overlay is in oAssemblyTable Draw_64.
+
+
+GLOBAL STATE
+-------------
+global.game_mode        "UI" or "RPG"
+global.hand_mode        HAND_MODE.GRAB or HAND_MODE.PAINT
+global.player_can_move  bool
+global.return_room      room to exit to when leaving UI rooms
+global.counter_min/max_x/y  bounds for drag_bounds_mode=1
+
+
+OBJECT HIERARCHY
+-----------------
+oInteractable
+  oCondimentTub
+    oTub_Sauce
+    oTub_Cheese
+    oTub_Pepperoni
+    oTub_Mushroom
+    oTub_Glass
+  oPizza
+oAssemblyTable   (standalone, no parent)
+oOvenStation     (standalone, no parent)
+oHand            (standalone, no parent)
+
+
+FILE MAP
+--------
+scripts/Pizza_Constants/Pizza_Constants.gml       -- All enums
+scripts/Pizza_Create/Pizza_Create.gml             -- Pizza struct factory
+scripts/Pizza_InitGrid/Pizza_InitGrid.gml         -- Grid setup (standalone)
+scripts/Pizza_GridInitForTable/...gml             -- Grid setup using table params
+scripts/Pizza_PaintGrid/Pizza_PaintGrid.gml       -- Brush painting logic
+scripts/Pizza_CoverageFromGrid/...gml             -- Coverage % calculation
+scripts/Pizza_StampTopping/Pizza_StampTopping.gml -- Topping stamp logic
+scripts/PointInPizza/PointInPizza.gml             -- Circle distance check
+scripts/Pizza_FinalizeScore/...gml                -- Score + rank calculation
+scripts/Pizza_ClearAndNew/Pizza_ClearAndNew.gml   -- Table reset after cooking
+scripts/Tub_OnClicked/Tub_OnClicked.gml           -- Ingredient toggle handler
+scripts/Pizza_Reset/Pizza_Reset.gml               -- STUB (empty)
+scripts/Pizza_SetCookState/...gml                 -- STUB (empty)
+scripts/Pizza_GridMarkCircle/...gml               -- STUB (empty)
+
+objects/oAssemblyTable/Create_0.gml               -- Table init, params
+objects/oAssemblyTable/Step_0.gml                 -- Paint/stamp per-frame logic
+objects/oAssemblyTable/Draw_64.gml                -- Debug overlay
+
+objects/oPizza/Create_0.gml                       -- Pizza object init
+objects/oPizza/Draw_0.gml                         -- Full pizza render pipeline
+
+objects/oOvenStation/Create_0.gml                 -- Cook timer init
+objects/oOvenStation/Step_0.gml                   -- Cook state updates
+objects/oOvenStation/Mouse_4.gml                  -- Pizza transfer on click
+
+objects/oHand/Create_0.gml                        -- Cursor init
+objects/oHand/Step_0.gml                          -- Hover + drag + paint trigger
+objects/oHand/Draw_0.gml                          -- Cursor sprite draw
+objects/oHand/Other_4.gml                         -- Room exit cleanup
+
+objects/oInteractable/Create_0.gml                -- Physics base class
+objects/oInteractable/Step_0.gml                  -- Physics movement + wiggle
+objects/oInteractable/Draw_0.gml                  -- Shadow + debug draw
+
+objects/oCondimentTub/Create_0.gml                -- Tub base
+objects/oTub_*/Create_0.gml                       -- Each ingredient subclass
+
+rooms/AssemblyLine/InstanceCreationCode_inst_21A8DCFB.gml  -- Table bounds
+
+
+WHAT IS NOT YET WIRED UP
+--------------------------
+- Order system: Pizza_FinalizeScore accepts an order struct but orders aren't generated
+- Delivery/serve: oServeStation exists in the project but is not integrated
+- Result screen: no UI for displaying score/rank after submission
+- Pizza_Reset, Pizza_SetCookState, Pizza_GridMarkCircle are empty stubs
+
+
+KNOWN DESIGN TENSIONS (as of this snapshot)
+--------------------------------------------
+- Painting is a separate mode (PAINT vs GRAB) requiring ingredient selection first.
+  This means the player can't drag the pizza while in paint mode.
+- The grid approach for coverage is accurate but has no visual output --
+  the player can't see sauce/cheese fill progress in a granular way.
+- Toppings are stamped while the table detects mouse position, not while dragging.
+  There's no "pick up pepperoni and place it" feel.
+- oOvenStation takes pizza away from table immediately on click,
+  rather than the player physically dragging the pizza to the oven.
+- The oven timer uses current_time (real elapsed ms), not a dedicated elapsed tracker,
+  which resets if the pizza is removed and replaced.
