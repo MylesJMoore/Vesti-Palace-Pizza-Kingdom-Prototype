@@ -1,0 +1,1 @@
+global.active_ingredient = INGREDIENT.NONE
