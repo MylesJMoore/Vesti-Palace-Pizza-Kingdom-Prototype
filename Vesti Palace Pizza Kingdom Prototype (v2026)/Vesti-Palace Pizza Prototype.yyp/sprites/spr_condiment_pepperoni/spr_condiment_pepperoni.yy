@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"Condiment Tubs",
-    "path":"folders/Assembly Line/Sprites/Condiment Tubs.yy",
+    "path":"folders/Assembly Line V2/Sprites/Condiment Tubs.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

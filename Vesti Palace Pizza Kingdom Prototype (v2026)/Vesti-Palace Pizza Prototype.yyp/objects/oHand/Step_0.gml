@@ -132,15 +132,88 @@ if (mouse_check_button_released(mb_left)) {
 // --------------------------------------------------
 // Paint mode — stamp toppings onto pizza
 // --------------------------------------------------
+// Paint mode
 if (global.hand_mode == HAND_MODE.PAINT) {
     var pizza = instance_position(x, y, oPizzaV2);
     if (pizza != noone) {
-        if (mouse_check_button_pressed(mb_left)) {
-            var t = instance_create_layer(x, y, "Instances", oTopping);
-            t.parent_pizza = pizza;
-            t.local_x = x - pizza.x;
-            t.local_y = y - pizza.y;
-            t.ingredient_type = global.active_ingredient;
+
+        // Discrete toppings — one per click
+		if (mouse_check_button_pressed(mb_left)) {
+		    if (global.active_ingredient != INGREDIENT.SAUCE &&
+		        global.active_ingredient != INGREDIENT.CHEESE) {
+        
+		        var dx = x - pizza.x;
+		        var dy = y - pizza.y;
+		        var pizza_radius_world = pizza.pizza_radius_surf * pizza.image_xscale;
+        
+		        if (dx*dx + dy*dy < pizza_radius_world * pizza_radius_world) {
+            
+		            // Count existing toppings of this type on this pizza
+					var current_count = 0;
+					var target_pizza = pizza;
+					var target_ingredient = global.active_ingredient;
+					with (oTopping) {
+					    if (parent_pizza == target_pizza &&
+					        ingredient_type == target_ingredient) {
+					        current_count++;
+					    }
+}
+            
+		            // Check limit
+		            var limit = 99;
+		            switch (global.active_ingredient) {
+		                case INGREDIENT.PEPPERONI: limit = pizza.max_pepperoni; break;
+		                case INGREDIENT.MUSHROOM:  limit = pizza.max_mushroom;  break;
+		                case INGREDIENT.GLASS:     limit = pizza.max_glass;     break;
+		            }
+            
+		            if (current_count < limit) {
+		                var t = instance_create_layer(x, y, "Instances", oTopping);
+		                t.parent_pizza = pizza;
+		                t.local_x = x - pizza.x;
+		                t.local_y = y - pizza.y;
+		                t.ingredient_type = global.active_ingredient;
+		                switch (global.active_ingredient) {
+		                    case INGREDIENT.MUSHROOM: t.variant = irandom(1); break;
+		                    case INGREDIENT.GLASS:    t.variant = irandom(7); break;
+		                    default: t.variant = 0; break;
+		                }
+		            }
+		        }
+		    }
+		}
+
+        // Sauce and cheese — stamp while held
+       if (mouse_check_button(mb_left)) {
+		    if (global.active_ingredient == INGREDIENT.SAUCE ||
+		        global.active_ingredient == INGREDIENT.CHEESE) {
+
+		        pizza.glob_timer++;
+		        if (pizza.glob_timer >= pizza.glob_rate) {
+		            pizza.glob_timer = 0;
+
+		            if (global.active_ingredient == INGREDIENT.SAUCE) {
+		                // Only paint if not already full
+		                if (pizza.sauce_globs < pizza.sauce_target) {
+		                    pizza.sauce_globs++;
+		                    PizzaScripts(pizza, x, y, global.active_ingredient);
+		                    var g = instance_create_layer(x, y, "Instances", oGlob);
+		                    g.sprite_index = spr_sauce_brush;
+		                }
+		            } else {
+		                if (pizza.cheese_globs < pizza.cheese_target) {
+		                    pizza.cheese_globs++;
+		                    PizzaScripts(pizza, x, y, global.active_ingredient);
+		                    var g = instance_create_layer(x, y, "Instances", oGlob);
+		                    g.sprite_index = spr_cheese_brush;
+		                }
+		            }
+		        }
+		    }
+		}
+
+        if (mouse_check_button_released(mb_left)) {
+            pizza.glob_timer = 0;
         }
     }
 }
