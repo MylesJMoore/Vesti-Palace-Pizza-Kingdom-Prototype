@@ -37,25 +37,23 @@ function PizzaScripts(pizza, world_x, world_y, ingredient) {
 }
 
 function Pizza_Cook(pizza) {
-    // Sauce surface — redraw with cooked sprite
+    var scale = pizza.surf_size / 1000; // scale to fill surface (1000 = sprite base size)
+    
     if (surface_exists(pizza.surf_sauce)) {
         var spr_sauce = spr_sauce_uncooked;
         if (pizza.cook_state == PIZZA_COOK.COOKED) spr_sauce = spr_sauce_cooked;
         if (pizza.cook_state == PIZZA_COOK.BURNT)  spr_sauce = spr_sauce_burnt;
         
-        // We need to re-tint the existing surface
-        // Simplest: draw cooked sprite over the surface using multiply blend
         surface_set_target(pizza.surf_sauce);
         gpu_set_blendmode_ext(bm_dest_colour, bm_zero);
         draw_sprite_ext(spr_sauce, 0,
             pizza.surf_size * 0.5,
             pizza.surf_size * 0.5,
-            1, 1, 0, c_white, 1);
+            scale, scale, 0, c_white, 1);
         gpu_set_blendmode(bm_normal);
         surface_reset_target();
     }
     
-    // Cheese surface
     if (surface_exists(pizza.surf_cheese)) {
         var spr_chees = spr_cheese_uncooked;
         if (pizza.cook_state == PIZZA_COOK.COOKED) spr_chees = spr_cheese_cooked;
@@ -66,12 +64,11 @@ function Pizza_Cook(pizza) {
         draw_sprite_ext(spr_chees, 0,
             pizza.surf_size * 0.5,
             pizza.surf_size * 0.5,
-            1, 1, 0, c_white, 1);
+            scale, scale, 0, c_white, 1);
         gpu_set_blendmode(bm_normal);
         surface_reset_target();
     }
     
-    // Update toppings cook state
     with (oTopping) {
         if (parent_pizza == pizza) {
             cook_state = pizza.cook_state;

@@ -1,6 +1,7 @@
 // --------------------------------------------------
 // Position hand in room space
 // --------------------------------------------------
+depth = -100000;
 x = mouse_x;
 y = mouse_y;
 
@@ -55,7 +56,7 @@ if (mouse_check_button_pressed(mb_left)) {
             held_item.hold_offset_y = held_item.y - y;
 
             // bring held item above most things
-            held_item.depth = -99999;
+            held_item.depth = -99990;
 
             // store original scale safely
             held_item.base_xscale = held_item.image_xscale;
@@ -168,17 +169,19 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 		            }
             
 		            if (current_count < limit) {
-		                var t = instance_create_layer(x, y, "Instances", oTopping);
-		                t.parent_pizza = pizza;
-		                t.local_x = x - pizza.x;
-		                t.local_y = y - pizza.y;
-		                t.ingredient_type = global.active_ingredient;
-		                switch (global.active_ingredient) {
-		                    case INGREDIENT.MUSHROOM: t.variant = irandom(1); break;
-		                    case INGREDIENT.GLASS:    t.variant = irandom(7); break;
-		                    default: t.variant = 0; break;
-		                }
-		            }
+					    var t = instance_create_layer(x, y, "Instances", oTopping);
+					    t.parent_pizza = pizza;
+					    t.local_x = x - pizza.x;
+					    t.local_y = y - pizza.y;
+					    t.ingredient_type = global.active_ingredient;
+					    t.depth = -500 - global.topping_depth; // newest topping always on top
+					    global.topping_depth++;
+					    switch (global.active_ingredient) {
+					        case INGREDIENT.MUSHROOM: t.variant = irandom(1); break;
+					        case INGREDIENT.GLASS:    t.variant = irandom(7); break;
+					        default: t.variant = 0; break;
+					    }
+					}
 		        }
 		    }
 		}

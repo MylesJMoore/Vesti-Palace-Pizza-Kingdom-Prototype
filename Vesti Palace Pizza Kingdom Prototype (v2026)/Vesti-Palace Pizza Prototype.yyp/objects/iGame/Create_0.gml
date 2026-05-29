@@ -29,3 +29,6 @@ global.counter_max_y = 680;
 
 //Ingredient Initialization
 global.active_ingredient = INGREDIENT.NONE;
+
+//Topping Depth
+global.topping_depth = 0;

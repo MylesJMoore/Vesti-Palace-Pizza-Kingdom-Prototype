@@ -1,5 +1,5 @@
 event_inherited();
-spawn_id = instance_number(oTopping);
+depth = -500;
 parent_pizza = noone;
 local_x = 0;
 local_y = 0;

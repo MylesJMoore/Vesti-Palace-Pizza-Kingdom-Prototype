@@ -14,6 +14,7 @@ is_locked = false;
 cook_state = PIZZA_COOK.UNCOOKED;
 
 // Sprites
+depth = -100;
 image_xscale = 0.3;
 image_yscale = 0.3;
 sprite_index = spr_base_uncooked;
@@ -21,8 +22,8 @@ sprite_index = spr_base_uncooked;
 // Coverage
 sauce_globs = 0;
 cheese_globs = 0;
-sauce_target = 100;
-cheese_target = 100;
+sauce_target = 300;
+cheese_target = 300;
 
 // Toppings Limit
 max_pepperoni = 8;
@@ -36,9 +37,9 @@ glob_rate = 2;
 //Surface
 //Surf Size is the internal resolution of the paint surface
 //Pizza radius is for the painting area radius in the shape of a circle
-surface_offset_x = 20;
-surface_offset_y = 20;
+surface_offset_x = 10;
+surface_offset_y = 10;
 surf_sauce  = -1;
 surf_cheese = -1;
-surf_size   = 1100;
-pizza_radius_surf = 475;
+surf_size = 1500;
+pizza_radius_surf = 480;
