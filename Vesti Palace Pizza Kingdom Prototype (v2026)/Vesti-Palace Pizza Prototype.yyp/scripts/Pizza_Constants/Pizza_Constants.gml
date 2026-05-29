@@ -13,11 +13,6 @@ enum INGREDIENT {
     GLASS
 }
 
-enum TOOLMODE {
-    GRAB = 0,    // normal drag physics
-    PAINT = 1    // painting on pizza surface
-}
-
 enum HAND_MODE {
     GRAB = 0,
     PAINT = 1

@@ -15,8 +15,9 @@ spr_click   = spr_cursor_click;
 hover_target = noone;
 held_item    = noone;
 
-x = mouse_x;
-y = mouse_y;
+//Starting Position
+x = 800;
+y = 475;
 
 // room-entry safety
 input_lock_frames = 0;

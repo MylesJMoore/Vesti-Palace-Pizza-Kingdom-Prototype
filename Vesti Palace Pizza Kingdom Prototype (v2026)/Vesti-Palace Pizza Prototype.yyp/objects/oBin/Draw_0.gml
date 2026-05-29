@@ -1,6 +1,6 @@
 draw_self();
 
-if (is_selected) {
+if (is_selected && global.hand_mode == HAND_MODE.PAINT) {
     draw_set_color(c_yellow);
     draw_set_alpha(0.4);
     draw_rectangle(
