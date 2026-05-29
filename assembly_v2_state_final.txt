@@ -1,0 +1,477 @@
+ASSEMBLY LINE V2 — FINAL WORKING STATE
+=======================================
+Project: Vesti Palace Pizza Kingdom Prototype (v2026)
+Documented: 2026-05-28
+Purpose: Shareable snapshot of the fully functional V2 system.
+         Covers architecture, how every system works, V1 vs V2 comparison,
+         and what still exists from V1.
+
+
+=======================================================
+WHAT V2 IS IN ONE PARAGRAPH
+=======================================================
+
+V2 is a surface-based, instance-driven pizza assembly system. The player
+clicks ingredient bins (oBin) to enter PAINT mode, then holds the mouse
+down over the pizza to paint sauce/cheese as real GPU brush strokes onto
+per-pizza surfaces, or clicks once to stamp discrete toppings (oTopping
+instances). The pizza object (oPizzaV2) owns its own surfaces and locks
+itself in place during painting. A cook button (oCookButton) advances the
+pizza through UNCOOKED → COOKED → BURNT, tinting the surfaces via a
+GPU multiply blend and updating all toppings. All input is driven by a
+single oHand object. Toppings always layer correctly above the pizza,
+and elevate together when the pizza is dragged.
+
+
+=======================================================
+V1 VS V2 — COMPARISON AND V2 PROS
+=======================================================
+
+                    V1 (oPizza)                     V2 (oPizzaV2)
+                    ----------------------------    ----------------------------
+Sauce/Cheese        Grid cell arrays                GPU surfaces (real pixels)
+Coverage tracking   Counted filled grid cells       Glob count vs target (300)
+Topping storage     ds_list of structs on pizza     oTopping instances in room
+Topping rendering   Drawn in oPizza.Draw_0 loop     Each oTopping draws itself
+Topping layering    Fixed draw order in list        global.topping_depth counter
+Topping + held      Not handled                     Toppings jump to depth -99995
+Painting driver     oAssemblyTable.Step             oHand.Step (single owner)
+Ingredient select   oCondimentTub + Tub_OnClicked   oBin with inline on_clicked
+Cook trigger        oOvenStation time-based timer   oCookButton (click to advance)
+Cook visual         Swaps coverage sprites           GPU multiply blend on surfaces
+Cook propagation    pizza.cook_state only           Surfaces tinted + all oToppings
+Surface safety      N/A                             Recreated on focus loss, freed on destroy
+Pizza lock          Mode-gated drag in oHand        Pizza zeroes own vx/vy in Step
+
+
+PRO 1: PAINTING LOOKS REAL
+   Sauce and cheese are brush-stamped onto a 1500×1500 GPU surface per pizza.
+   You see actual layered paint strokes, not a coverage threshold swap.
+   The cook system multiplies a tint sprite over the existing paint so
+   the actual strokes go dark/brown — the shape of your paint job is preserved.
+
+PRO 2: SINGLE INPUT OWNER
+   oHand.Step handles everything: hover, drag, paint, topping stamp, glob
+   throttle, right-click cancel. In V1 painting was split between oHand and
+   oAssemblyTable.Step, creating two places that could drift out of sync.
+
+PRO 3: TOPPINGS ARE REAL OBJECTS
+   oTopping instances follow the pizza via local_x/y. They layer correctly
+   using global.topping_depth (newest on top). When the pizza is dragged,
+   every topping whose parent_pizza.held == true jumps to depth -99995,
+   keeping the whole pizza + toppings visual coherent while moving.
+   V1 toppings were structs in a ds_list: no individual existence, no depth
+   control, drawn in the pizza's own Draw event.
+
+PRO 4: COOK PROPAGATES TO EVERYTHING
+   Pizza_Cook() tints both surfaces AND iterates every oTopping in the room
+   whose parent_pizza matches, updating their cook_state. Each sprite type
+   has uncooked/cooked/burnt variants that auto-select in Draw_0.
+   V1 only updated pizza.cook_state and re-drew coverage sprites.
+
+PRO 5: PIZZA SELF-LOCKS DURING PAINTING
+   oPizzaV2.Step zeroes vx and vy when global.hand_mode == PAINT.
+   The pizza decides it won't move — no coupling to oHand for this behavior.
+
+PRO 6: SURFACE LOSS IS HANDLED
+   oPizzaV2.Step calls surface_exists() every frame and recreates the surface
+   if it's been lost (Windows focus loss). oPizzaV2.Other_5 frees both
+   surfaces when the instance is destroyed, preventing GPU memory leaks.
+
+PRO 7: COOK BUTTON IS FAST TO TEST WITH
+   oCookButton advances cook_stage 0→1→2 on click and immediately fires
+   Pizza_Cook(). No waiting. V1's timer oven (6s cook, 12s burnt) was
+   realistic but slowed down iterating on the cook visuals.
+
+
+=======================================================
+HOW EVERY SYSTEM WORKS (DETAILED)
+=======================================================
+
+--- INGREDIENT SELECTION (oBin) ---
+
+oBin.Create_0 defines an inline on_clicked function:
+  - If already selected: is_selected=false, hand_mode=GRAB, active_ingredient=NONE
+  - Else: deselect all other oBin instances (with oBin { is_selected=false }),
+          is_selected=true, hand_mode=PAINT, active_ingredient=ingredient_type
+
+oBin.Draw_0: draws self + a yellow 0.4-alpha rectangle overlay when selected.
+
+The 5 bin instances in AssemblyLineV2 each have ingredient_type and sprite_index
+set via room instance creation code (spr_condiment_sauce/cheese/pepperoni/mushroom/glass).
+
+
+--- SAUCE / CHEESE PAINTING ---
+
+Trigger: global.hand_mode == PAINT, active_ingredient is SAUCE or CHEESE,
+         mb_left held, instance_position(x, y, oPizzaV2) != noone.
+
+Per frame in oHand.Step:
+  pizza.glob_timer++
+  Every glob_rate (2) frames:
+    If sauce_globs < sauce_target (300):
+      sauce_globs++
+      PizzaScripts(pizza, x, y, INGREDIENT.SAUCE)  -- paints to surf_sauce
+      Spawn oGlob at cursor with spr_sauce_brush     -- visual feedback particle
+    Same logic for cheese / surf_cheese / spr_cheese_brush
+
+PizzaScripts(pizza, world_x, world_y, ingredient):
+  Picks surf_sauce or surf_cheese.
+  Converts world cursor pos → surface pixel pos:
+    surf_x = (world_x - pizza.x) / pizza.image_xscale + pizza.surf_size * 0.5
+    surf_y = (world_y - pizza.y) / pizza.image_yscale + pizza.surf_size * 0.5
+  Clips to pizza circle: if distance from surface center > (pizza_radius_surf - brush_half) exit.
+  Draws spr_sauce_brush or spr_cheese_brush at scale 5×5 with random rotation, alpha 0.9.
+
+When mb_left is released: pizza.glob_timer = 0.
+
+Coverage is approximated by: clamp(pizza.sauce_globs / 300, 0, 1)
+(Not a true pixel coverage calculation — glob count is the proxy.)
+
+
+--- TOPPING STAMPING ---
+
+Trigger: global.hand_mode == PAINT, active_ingredient is PEPPERONI/MUSHROOM/GLASS,
+         mb_left pressed, cursor within pizza circle radius.
+
+In oHand.Step on mb_left pressed:
+  dx = x - pizza.x, dy = y - pizza.y
+  pizza_radius_world = pizza.pizza_radius_surf * pizza.image_xscale  (= 480 * 0.3 = 144px)
+  If dx²+dy² < radius²:
+    Count existing oTopping instances on this pizza of this ingredient type.
+    Check against limit (pepperoni=8, mushroom=10, glass=8).
+    If under limit:
+      instance_create_layer(x, y, "Instances", oTopping)
+      t.parent_pizza = pizza
+      t.local_x = x - pizza.x
+      t.local_y = y - pizza.y
+      t.ingredient_type = active_ingredient
+      t.depth = -500 - global.topping_depth  (newest topping always on top)
+      global.topping_depth++
+      t.variant: mushroom=irandom(1), glass=irandom(7), else=0
+
+One topping per click. No repeat-stamp on hold.
+
+
+--- TOPPING BEHAVIOR (oTopping) ---
+
+Create_0:
+  event_inherited() (from oInteractable — toppings are draggable)
+  depth = -500
+  parent_pizza = noone, local_x/y = 0
+  ingredient_type = INGREDIENT.NONE, cook_state = UNCOOKED
+  variant = irandom(1)  (default; overwritten by oHand on spawn)
+  image_xscale/yscale = 0.3
+  image_angle = random(360)
+
+Step_0:
+  If parent_pizza exists:
+    x = parent_pizza.x + local_x
+    y = parent_pizza.y + local_y
+    If parent_pizza.held: depth = -99995  (elevates with held pizza)
+
+Draw_0:
+  Picks sprite by ingredient_type × cook_state × variant:
+    PEPPERONI: spr_pepperoni_uncooked/cooked/burnt
+    MUSHROOM variant 0: spr_mushroom_uncookedL/cookedL/burntL
+    MUSHROOM variant 1: spr_mushroom_uncookedR/cookedR/burntR
+    GLASS variant 0-7:  spr_glass_1 through spr_glass_8
+  draw_sprite_ext with image_angle and image_alpha.
+
+
+--- SURFACE RENDERING (oPizzaV2.Draw_0) ---
+
+Draw order:
+  1. Base sprite (spr_base_uncooked/cooked/burnt) at (x, y) scale 0.3
+  2. Sauce surface: draw_surface_ext(surf_sauce, draw_x, draw_y, 0.3, 0.3, ...)
+  3. Cheese surface: same
+
+Surface draw position:
+  draw_x = px - (surf_size * sx * 0.5) - surface_offset_x
+  draw_y = py - (surf_size * sy * 0.5) - surface_offset_y
+  (surf_size=1500, sx/sy=0.3, surface_offset=10)
+
+Surfaces are drawn at the same scale as the pizza (0.3) so the 1500px surface
+maps to 450px in world space, centered on the pizza.
+
+
+--- COOKING (oCookButton + Pizza_Cook) ---
+
+oCookButton.Create_0:
+  cook_stage = 0
+  on_clicked: cook_stage++ (capped at 2), pizza.cook_state = cook_stage, Pizza_Cook(pizza)
+
+oCookButton.Draw_0:
+  draw_self + label below: "COOK" / "OVERCOOK" / "BURNT" by cook_stage
+
+Pizza_Cook(pizza) in PizzaScripts.gml:
+  scale = pizza.surf_size / 1000  (= 1500/1000 = 1.5)
+  For surf_sauce:
+    Pick spr_sauce_uncooked/cooked/burnt by pizza.cook_state
+    surface_set_target(surf_sauce)
+    gpu_set_blendmode_ext(bm_dest_colour, bm_zero)  -- multiply blend
+    draw_sprite_ext(spr_sauce, 0, surf_size*0.5, surf_size*0.5, scale, scale, ...)
+    gpu_set_blendmode(bm_normal)
+    surface_reset_target()
+  Same for surf_cheese.
+  with (oTopping) { if parent_pizza == pizza: cook_state = pizza.cook_state }
+
+The multiply blend preserves the existing paint shape/coverage while tinting
+pixels darker to match the cooked/burnt color palette.
+
+
+--- GLOB PARTICLES (oGlob) ---
+
+Spawned at cursor position every glob_rate frames while painting sauce/cheese.
+fade_speed = 0.06 → alpha hits 0 in ~17 frames (~0.28s at 60fps), then destroys.
+depth = -99998 (always near the top visually).
+No physics. Pure cosmetic feedback.
+
+
+--- SURFACE SAFETY (oPizzaV2.Step_0 + Other_5) ---
+
+Step_0 recreates surfaces if surface_exists() is false:
+  surf_sauce/surf_cheese = surface_create(surf_size, surf_size)
+  surface_set_target → draw_clear_alpha(c_white, 0) → surface_reset_target
+
+Other_5 (Clean Up event) frees both surfaces:
+  if surface_exists(surf_sauce)  surface_free(surf_sauce)
+  if surface_exists(surf_cheese) surface_free(surf_cheese)
+
+
+--- INPUT SYSTEM (oHand.Step_0) ---
+
+Runs every frame in order:
+
+1. x = mouse_x, y = mouse_y. depth forced to -100000.
+2. input_lock_frames countdown (only when mb_left up). Exits if > 0.
+3. await_mouse_release check. Exits until mb_left cleanly released.
+4. Hover: if not holding → instance_position(x, y, oInteractable).
+5. mb_left pressed + hover_target exists:
+   - can_be_clicked && !can_be_picked_up → call on_clicked(hover_target)
+   - hand_mode==GRAB && can_be_picked_up → pick up, depth=-99990,
+     store hold_offset, store base_xscale/yscale
+6. While holding: apply drag force toward (cursor + hold_offset),
+   clamp velocity to max_speed, respect drag_bounds_mode (0/1/2).
+7. mb_left released: restore scale, set held=false, depth=-100, clear held_item.
+8. PAINT mode block (see painting + topping sections above).
+9. mb_right pressed:
+   global.hand_mode = GRAB
+   Looks up oAssemblyTable, clears table.active_ingredient and is_painting
+   (NOTE: this is a V1 leftover — see "V1 remnants" section below)
+10. cursor_state: 2 if clicking, 1 if hovering, 0 otherwise.
+
+oHand.Draw_0:
+  PAINT + SAUCE:   draw spr_sauce_brush
+  PAINT + CHEESE:  draw spr_cheese_brush
+  PAINT + other:   draw spr_cursor_default
+  GRAB:            draw cursor_state sprite (default/hover/click)
+
+oHand.Other_4 (room exit):
+  Drops held item, restores scale/depth, resets hand_mode=GRAB,
+  sets input_lock_frames=8 + await_mouse_release=true.
+
+
+--- DRAG PHYSICS (oInteractable base class) ---
+
+All draggable objects share this via inheritance.
+
+Step_0:
+  Wiggle: if held → image_angle = sin(current_time/90 + wiggle_phase) * 2
+          else    → image_angle = lerp(image_angle, 0, 0.2)
+  Velocity damping: vx *= slide (not held) or drag_friction_x (held)
+  Position: x += vx, y += vy
+  Boundary clamping by drag_bounds_mode.
+
+Draw_0:
+  Drop shadow when held: draw_sprite_ext offset +4/+6, alpha 0.35, black.
+  draw_self().
+
+Physics tuning by object type:
+  oPizzaV2 (heavy): drag_strength=0.16, max_speed=18, friction=0.80, slide=0.92
+  oInteractable (default): drag_strength=0.22, max_speed=26, friction=0.84, slide=0.93
+
+
+--- GLOBAL STATE ---
+
+global.game_mode        "UI" or "RPG" (set by iGame.Step)
+global.hand_mode        HAND_MODE.GRAB or HAND_MODE.PAINT
+global.active_ingredient INGREDIENT enum value
+global.player_can_move  bool
+global.return_room      RPG room to return to on ESC
+global.counter_min/max_x/y  drag_bounds_mode=1 play area
+global.topping_depth    int, incremented each time a topping is stamped
+
+
+--- ENUMS (Pizza_Constants.gml) ---
+
+enum PIZZA_COOK  { UNCOOKED=0, COOKED=1, BURNT=2 }
+enum INGREDIENT  { NONE=0, SAUCE, CHEESE, PEPPERONI, MUSHROOM, GLASS }
+enum HAND_MODE   { GRAB=0, PAINT=1 }
+enum TOOLMODE    { GRAB=0, PAINT=1 }  ← dead duplicate of HAND_MODE, never referenced
+
+
+=======================================================
+KEY NUMBERS / TUNING REFERENCE
+=======================================================
+
+Surface:
+  surf_size           = 1500 px (internal resolution)
+  pizza_radius_surf   = 480 px (clip radius for brush)
+  surface_offset_x/y  = 10 px
+  brush scale         = 5× (spr_sauce/cheese_brush drawn at 5×5 in surface space)
+  brush_half          = 60 px (clip margin = 480-60 = 420 px effective paint radius)
+  Cook sprite scale   = surf_size / 1000 = 1.5 (fills the 1500px surface)
+
+Pizza world size:
+  image_xscale/yscale = 0.3
+  Effective world radius = pizza_radius_surf * 0.3 = 480 * 0.3 = 144 px
+
+Coverage:
+  sauce_target = cheese_target = 300 globs
+  glob_rate = 2 frames between stamps
+  At 60fps holding: 30 globs/sec → ~10 seconds to fill
+
+Toppings:
+  max_pepperoni = 8, max_mushroom = 10, max_glass = 8
+  Depth: -500 - global.topping_depth (newest always on top)
+  When pizza held: all toppings jump to depth -99995
+
+Glob particles:
+  fade_speed = 0.06 → ~17 frames to disappear
+
+oOvenStation (not used in AssemblyLineV2 but still in project):
+  cook_time_needed = 6000 ms, burn_time = 12000 ms
+
+
+=======================================================
+FULL FILE MAP (v2026 project)
+=======================================================
+
+CORE V2 ASSEMBLY OBJECTS:
+  objects/oPizzaV2/Create_0.gml       Physics, scale, glob counters, surface vars
+  objects/oPizzaV2/Step_0.gml         Paint-mode lock (zero vx/vy), surface recreation
+  objects/oPizzaV2/Draw_0.gml         Base + surf_sauce + surf_cheese draw
+  objects/oPizzaV2/Other_5.gml        surface_free both surfaces on destroy
+
+  objects/oHand/Create_0.gml          Cursor init, sprite refs, lock vars
+  objects/oHand/Step_0.gml            ALL input: hover, drag, paint, toppings, right-click
+  objects/oHand/Draw_0.gml            Cursor/brush sprite by mode and state
+  objects/oHand/Other_4.gml           Room-exit cleanup, reset hand_mode
+
+  objects/oTopping/Create_0.gml       Instance init, local_x/y, variant, random angle
+  objects/oTopping/Step_0.gml         Follow parent_pizza; jump depth when pizza held
+  objects/oTopping/Draw_0.gml         Sprite select: type × cook_state × variant
+
+  objects/oGlob/Create_0.gml          Fade particle: fade_speed, depth -99998
+  objects/oGlob/Step_0.gml            Alpha fade, instance_destroy when <= 0
+  objects/oGlob/Draw_0.gml            draw_sprite_ext with image_alpha
+
+  objects/oBin/Create_0.gml           Ingredient selector, inline on_clicked closure
+  objects/oBin/Draw_0.gml             draw_self + yellow selection highlight
+  objects/oBin/Draw_64.gml            Debug HUD: ingredient, hand mode, coverage,
+                                       pizza/topping/hand depth, held state
+
+  objects/oCookButton/Create_0.gml    cook_stage cycler 0→1→2, inline on_clicked
+  objects/oCookButton/Draw_0.gml      draw_self + stage label (COOK/OVERCOOK/BURNT)
+
+SHARED / BASE:
+  objects/oInteractable/Create_0.gml  Physics base: drag vars, bounds mode, wiggle_phase
+  objects/oInteractable/Step_0.gml    Wiggle, velocity damping, movement, clamping
+  objects/oInteractable/Draw_0.gml    Drop shadow when held + draw_self
+
+  objects/oOvenStation/Create_0.gml   Timer vars (still functional, not in V2 room)
+  objects/oOvenStation/Step_0.gml     Updates pizza.cook_state by elapsed time
+  objects/oOvenStation/Mouse_4.gml    Click to send/retrieve pizza via oAssemblyTable
+
+  objects/iGame/Create_0.gml          Globals init: hand_mode, active_ingredient,
+                                       counter bounds, topping_depth=0, cursor off
+  objects/iGame/Step_0.gml            Room-change detection, game_mode, player visibility
+
+SCRIPTS:
+  scripts/PizzaScripts/PizzaScripts.gml
+      PizzaScripts(pizza, wx, wy, ingredient)  — brush stroke to surface
+      Pizza_Cook(pizza)                         — multiply-blend tint + topping propagation
+
+  scripts/Pizza_Constants/Pizza_Constants.gml  — All enums (PIZZA_COOK, INGREDIENT, HAND_MODE)
+  scripts/Pizza_FinalizeScore/Pizza_FinalizeScore.gml  — Scoring (not yet wired up in V2)
+  scripts/PointInPizza/PointInPizza.gml        — Squared distance circle check
+
+ROOM:
+  rooms/AssemblyLineV2/RoomCreationCode.gml    global.active_ingredient = NONE
+  rooms/AssemblyLineV2/InstanceCreationCode_*  5 files: ingredient_type + sprite per oBin
+
+V1 SCRIPTS (still in project, used only by oAssemblyTable / oPizza):
+  scripts/Pizza_Create/Pizza_Create.gml
+  scripts/Pizza_ClearAndNew/Pizza_ClearAndNew.gml
+  scripts/Pizza_InitGrid/Pizza_InitGrid.gml
+  scripts/Pizza_GridInitForTable/Pizza_GridInitForTable.gml
+  scripts/Pizza_PaintGrid/Pizza_PaintGrid.gml
+  scripts/Pizza_CoverageFromGrid/Pizza_CoverageFromGrid.gml
+  scripts/Pizza_StampTopping/Pizza_StampTopping.gml
+  scripts/Tub_OnClicked/Tub_OnClicked.gml
+
+EMPTY STUBS (never called, never implemented):
+  scripts/Pizza_Reset/Pizza_Reset.gml
+  scripts/Pizza_SetCookState/Pizza_SetCookState.gml
+  scripts/Pizza_GridMarkCircle/Pizza_GridMarkCircle.gml
+
+
+=======================================================
+V1 REMNANTS STILL IN THE PROJECT
+=======================================================
+
+These are not breaking anything, but they're dead weight in the V2 context.
+Good candidates for cleanup before moving to the next phase.
+
+1. oAssemblyTable
+   Exists in the project and possibly still in AssemblyLineV2 room.
+   Its Step_0 looks for oPizza (V1) in its table bounds and drives the old
+   grid-based painting. In V2 painting is owned by oHand. The oven
+   (oOvenStation.Mouse_4) still calls table.pizza and table.Pizza_ClearAndNew(),
+   so if oAssemblyTable is in the room it creates a coupling to V1 logic.
+
+2. oHand.Step right-click references oAssemblyTable
+   The right-click cancel block does:
+     instance_find(oAssemblyTable, 0) → table.active_ingredient = NONE, is_painting = false
+   In V2 that's irrelevant — painting state lives in global.active_ingredient only.
+   Should just be: global.hand_mode = GRAB; global.active_ingredient = NONE; with(oBin){is_selected=false;}
+
+3. oCondimentTub + Tub_OnClicked
+   The old tub system (oCondimentTub parent + oTub_* children + Tub_OnClicked script)
+   routes ingredient selection through oAssemblyTable.active_ingredient.
+   In V2, oBin handles selection inline via global.active_ingredient.
+   If AssemblyLineV2 uses oBin (which the instance creation codes confirm),
+   oCondimentTub and Tub_OnClicked are never called.
+
+4. oPizza (V1 grid pizza)
+   The original pizza object is still in the project. oAssemblyTable.Step
+   looks for it specifically with (oPizza) {...}. oPizza uses ds_list for
+   toppings and draws everything in its own Draw_0 loop.
+
+5. TOOLMODE enum
+   Defined in Pizza_Constants with the same values as HAND_MODE (GRAB=0, PAINT=1).
+   TOOLMODE is never referenced in any file — only HAND_MODE is used.
+   Safe to delete.
+
+6. Empty stub scripts (Pizza_Reset, Pizza_SetCookState, Pizza_GridMarkCircle)
+   Defined but never called or implemented. Clutter in the script list.
+
+7. oOvenStation
+   Fully implemented and functional, but not placed in AssemblyLineV2.
+   oCookButton replaced it for prototype speed. Worth keeping for the full game
+   since the timer-based approach is more authentic to the cooking fantasy.
+
+
+=======================================================
+WHAT IS NOT YET WIRED UP
+=======================================================
+
+- Order system: no orders are generated; Pizza_FinalizeScore exists but is never called
+- Delivery / serve: oServeStation is in the project but not integrated
+- Score display: no results UI after cooking
+- Pizza reset in V2: destroying a oPizzaV2 and spawning a fresh one (with clean surfaces
+  and no toppings) is not scripted yet — needs a V2-aware Pizza_ClearAndNew equivalent
+- global.topping_depth never resets; will increment forever across pizza resets
+  (harmless for a prototype, needs resetting when a pizza is cleared)
+- Right-click does not clear oBin.is_selected visual highlight
