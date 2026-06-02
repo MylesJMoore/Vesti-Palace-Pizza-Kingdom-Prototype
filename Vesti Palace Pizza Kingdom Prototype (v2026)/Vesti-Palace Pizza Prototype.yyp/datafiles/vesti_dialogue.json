@@ -1,0 +1,53 @@
+{
+  "nodes": [
+	{
+	  "id": "counter_customer_greet",
+	  "renderer": "box",
+	  "box_layout": "name_only",
+	  "box_style": "undertale",
+	  "lines": [
+		{ "speaker": "guramahsh","title": "Guramahsh", "text": "Tell me, child. What pizza do you envision Guramahsh requiring?" },
+		{
+		  "type": "choice",
+		  "style": "vertical",
+		  "box_style": "undertale",
+		  "title": "Guramahsh",
+		  "options": [
+			{ "text": "Horse Blood, Extra Pepperoni. Thin Crust.", "goto": "counter_customer_good" },
+			{ "text": "BLT (Bacon, Lettuce, Tangerine) Deep Pan Crust", "goto": "counter_customer_bad" }
+		  ]
+		}
+	  ]
+	},
+	{
+	  "id": "counter_customer_good",
+	  "renderer": "box",
+	  "title": "Guramahsh",
+	  "box_layout": "name_only",
+	  "box_style": "undertale",
+	  "lines": [
+		{ "speaker": "guramahsh", "text": "Great." }
+	  ]
+	},
+	{
+	  "id": "counter_customer_bad",
+	  "renderer": "box",
+	  "title": "Guramahsh",
+	  "box_layout": "name_only",
+	  "box_style": "undertale",
+	  "lines": [
+		{ "speaker": "guramahsh", "text": "Yuck, that's really fucking gross. Great!" }
+	  ]
+	},
+	{
+	  "id": "counter_customer_greet_return",
+	  "renderer": "box",
+	  "title": "Guramahsh",
+	  "box_layout": "name_only",
+	  "box_style": "undertale",
+	  "lines": [
+		{ "speaker": "guramahsh", "text": "I, Guramahsh, await my pizza." }
+	  ]
+	}
+  ]
+}

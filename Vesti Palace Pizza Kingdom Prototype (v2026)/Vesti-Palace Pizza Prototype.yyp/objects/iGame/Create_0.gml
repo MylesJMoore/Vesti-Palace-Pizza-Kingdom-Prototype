@@ -32,3 +32,7 @@ global.active_ingredient = INGREDIENT.NONE;
 
 //Topping Depth
 global.topping_depth = 0;
+
+//Customers
+global.customer_queue = ["counter_customer", "counter_customer_2"];
+global.current_customer = 0;
