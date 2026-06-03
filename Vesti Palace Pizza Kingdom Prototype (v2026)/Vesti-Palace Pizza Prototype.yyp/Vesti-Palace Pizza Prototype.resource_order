@@ -5,6 +5,7 @@
     {"name":"Scripts","order":2,"path":"folders/Assembly Line V2/Scripts.yy",},
     {"name":"Sprites","order":1,"path":"folders/Assembly Line V2/Sprites.yy",},
     {"name":"Condiment Tubs","order":3,"path":"folders/Assembly Line V2/Sprites/Condiment Tubs.yy",},
+    {"name":"Pizza Box","order":6,"path":"folders/Assembly Line V2/Sprites/Pizza Box.yy",},
     {"name":"Pizza Sauce","order":1,"path":"folders/Assembly Line V2/Sprites/Pizza Sauce.yy",},
     {"name":"Pizza Toppings","order":2,"path":"folders/Assembly Line V2/Sprites/Pizza Toppings.yy",},
     {"name":"Glass","order":3,"path":"folders/Assembly Line V2/Sprites/Pizza Toppings/Glass.yy",},

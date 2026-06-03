@@ -91,7 +91,7 @@ function dialogue_show_line() {
             _inst = instance_create_layer(0, 0, "Instances", obj_dialogue_box);
             _inst.box_layout = _mgr.current_box_layout;
 			if _mgr.current_box_style == "undertale" {
-		        dialogue_box_set_undertale_style(_inst);
+		        dialogue_box_set_undertale_style(_inst, true);
 		    }
         } else {
             _inst = instance_create_layer(obj_player.x, obj_player.y - 550, "Instances", obj_dialogue_bubble);
@@ -262,12 +262,12 @@ function dialogue_get_speaker_name(speaker_id) {
     }
 }
 
-function dialogue_box_set_undertale_style(box_inst) {
+function dialogue_box_set_undertale_style(box_inst, is_choice_box = false) {
     box_inst.box_style    = "undertale";
     box_inst.box_layout   = obj_dialogue_manager.current_box_layout; // reads from JSON
-    box_inst.name_text_color = c_yellow;
+    box_inst.name_text_color = c_yellow;  // Speaker Name
+	box_inst.text_color      = make_color_rgb(180, 255, 100); // Body Text - Lime Green
     box_inst.name_bg_color   = c_black;
-    box_inst.text_color   = make_color_rgb(180, 255, 100); // green-yellow text
     box_inst.box_position = obj_dialogue_manager.current_box_position;
     box_inst.box_h        = 200;
     box_inst.box_margin   = 100;
@@ -276,4 +276,9 @@ function dialogue_box_set_undertale_style(box_inst) {
     box_inst.text_padding_horizontal = 24;
     box_inst.text_padding_vertical   = 20;
     box_inst.advance_key  = ord("Z");
+	
+	//Check if this is a choice box and override speaker name color
+	if (is_choice_box) {
+		box_inst.text_color = c_yellow;
+	}
 }
