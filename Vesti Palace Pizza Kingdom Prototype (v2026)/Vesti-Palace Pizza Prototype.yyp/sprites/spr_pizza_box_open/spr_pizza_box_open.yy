@@ -1,10 +1,10 @@
 {
   "$GMSprite":"v2",
-  "%Name":"oPizzaBox",
+  "%Name":"spr_pizza_box_open",
   "bboxMode":0,
-  "bbox_bottom":0,
+  "bbox_bottom":1189,
   "bbox_left":0,
-  "bbox_right":0,
+  "bbox_right":2069,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -12,16 +12,16 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"cb25701b-4b12-4f56-9bf1-2cc0e5defa1e","name":"cb25701b-4b12-4f56-9bf1-2cc0e5defa1e","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"6e8927d5-376d-412e-889a-440f6db2361f","name":"6e8927d5-376d-412e-889a-440f6db2361f","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
-  "height":64,
+  "height":1190,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"d476e7dc-0d93-458a-bbd6-9d1272f89666","blendMode":0,"displayName":"default","isLocked":false,"name":"d476e7dc-0d93-458a-bbd6-9d1272f89666","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"1054dd41-9344-4a07-a2c5-822581797e5b","blendMode":0,"displayName":"default","isLocked":false,"name":"1054dd41-9344-4a07-a2c5-822581797e5b","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
-  "name":"oPizzaBox",
+  "name":"spr_pizza_box_open",
   "nineSlice":null,
   "origin":0,
   "parent":{
@@ -33,7 +33,7 @@
   "resourceVersion":"2.0",
   "sequence":{
     "$GMSequence":"v1",
-    "%Name":"oPizzaBox",
+    "%Name":"spr_pizza_box_open",
     "autoRecord":true,
     "backdropHeight":768,
     "backdropImageOpacity":0.5,
@@ -57,7 +57,7 @@
       "resourceType":"KeyframeStore<MomentsEventKeyframe>",
       "resourceVersion":"2.0",
     },
-    "name":"oPizzaBox",
+    "name":"spr_pizza_box_open",
     "playback":1,
     "playbackSpeed":30.0,
     "playbackSpeedType":0,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"cb25701b-4b12-4f56-9bf1-2cc0e5defa1e","path":"sprites/oPizzaBox/oPizzaBox.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"95f49c44-685f-4406-bdf7-d1468c4d95c7","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"6e8927d5-376d-412e-889a-440f6db2361f","path":"sprites/spr_pizza_box_open/spr_pizza_box_open.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"5f858379-43af-49cd-ae17-b4a8575874e3","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":64,
+  "width":2070,
 }

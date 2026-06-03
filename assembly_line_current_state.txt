@@ -1,8 +1,185 @@
-ASSEMBLY LINE - CURRENT STATE DOCUMENTATION
-===========================================
-Documented: 2026-05-19
-Purpose: Snapshot before pivoting to a new approach
+VESTI PALACE PIZZA — PROJECT STATE DOCUMENTATION
+=================================================
+Last Updated: 2026-06-02
+Purpose: Consolidated snapshot of live V2 state + archived V1 reference
 
+
+=======================================================================
+SECTION 1: oPizzaV2 — CREATE EVENT VARIABLES
+=======================================================================
+Source: objects/oPizzaV2/Create_0.gml
+
+Inherits from oInteractable via event_inherited().
+
+-- Physics (overrides from parent) --
+  drag_strength     = 0.16
+  max_speed         = 18
+  drag_friction_x   = 0.80
+  drag_friction_y   = 0.80
+  slide             = 0.92
+
+-- Interaction Settings --
+  drag_bounds_mode  = 0       (no clamping)
+  can_be_picked_up  = true
+  can_be_clicked    = false
+  is_locked         = false
+  cook_state        = PIZZA_COOK.UNCOOKED
+
+-- Sprite / Display --
+  depth             = -100
+  image_xscale      = 0.3
+  image_yscale      = 0.3
+  sprite_index      = spr_base_uncooked
+
+-- Coverage (glob-based, not grid) --
+  sauce_globs       = 0
+  cheese_globs      = 0
+  sauce_target      = 300
+  cheese_target     = 300
+
+-- Topping Limits --
+  max_pepperoni     = 8
+  max_mushroom      = 10
+  max_glass         = 8
+
+-- Glob Stamp Timer --
+  glob_timer        = 0
+  glob_rate         = 2
+
+-- Surfaces --
+  surface_offset_x  = 10
+  surface_offset_y  = 10
+  surf_sauce        = -1    (uninitialized; created at runtime)
+  surf_cheese       = -1    (uninitialized; created at runtime)
+  surf_size         = 1500  (internal resolution of paint surface in px)
+  pizza_radius_surf = 480   (paint mask radius in surface-space px)
+
+NOTE: V2 replaces the ds_grid coverage system with surface-based painting.
+surf_size=1500 is the surface canvas. pizza_radius_surf=480 defines the
+circular clipping area within that canvas.
+
+
+=======================================================================
+SECTION 2: AssemblyLineV2 ROOM — INSTANCE LAYOUT
+=======================================================================
+Source: rooms/AssemblyLineV2/AssemblyLineV2.yy
+Room size: 2464 x 978
+View: 1300 x 768 viewport (1600 x 900 world), tracked by oHand
+
+--- Layer: PizzaObjects (depth 0) ---
+  inst_B01C297    oBin    x=608,  y=352   scale=(0.616, 0.680)  [has creation code]
+  inst_4C02019    oBin    x=704,  y=192   scale=(0.616, 0.680)  [has creation code]
+  inst_3F65AA6C   oBin    x=864,  y=352   scale=(0.616, 0.680)  [has creation code]
+  inst_67345ABC   oBin    x=1120, y=352   scale=(0.616, 0.680)  [has creation code]
+  inst_5E560CFB   oBin    x=1376, y=352   scale=(0.616, 0.680)  [has creation code]
+
+--- Layer: Environment (depth 100) ---
+  inst_62A6F8CC_1  oHand         x=736,  y=512   scale=(1.0, 1.0)
+  inst_51D5A066    oPizzaV2      x=800,  y=704   scale=(1.0, 1.0)
+  inst_3D722CCC    oCookButton   x=1312, y=640   scale=(1.0, 1.0)
+
+--- Layer: Background (depth 200) ---
+  Sprite: spr_assembly_line (tiled background, not a game object)
+
+Creation order: oHand -> oBin x5 -> oPizzaV2 -> oCookButton
+
+NOTE: The 5 oBin instances each have creation code (likely assigning ingredient
+type). No oAssemblyTable, oOvenStation, or oCondimentTub is placed in this room —
+they belong to the old V1 room. The cook flow here uses oCookButton instead.
+
+
+=======================================================================
+SECTION 3: iGame — GLOBAL VARIABLES INITIALIZED IN CREATE
+=======================================================================
+Source: objects/iGame/Create_0.gml
+
+  global.game_mode          = "UI"
+  global.hand_mode          = HAND_MODE.GRAB
+  global.player_can_move    = true
+  global.return_room        = VestiOffice    (only set if not already defined)
+  global.counter_min_x      = 0
+  global.counter_min_y      = 400
+  global.counter_max_x      = 1362
+  global.counter_max_y      = 680
+  global.active_ingredient  = INGREDIENT.NONE
+  global.topping_depth      = 0
+  global.customer_queue     = ["counter_customer", "counter_customer_2"]
+  global.current_customer   = 0
+
+Also sets: window_set_cursor(cr_none), last_room = room, then room_goto_next().
+
+
+=======================================================================
+SECTION 4: oScore / oPizzaBox / oDeliveryBox — OBJECT STATUS
+=======================================================================
+
+  oScore         DOES NOT EXIST as an object. Scoring is handled by the
+                 script Pizza_FinalizeScore.gml (returns struct, not an object).
+
+  oPizzaBox      DOES NOT EXIST as an object. A sprite named oPizzaBox exists
+                 (sprites/oPizzaBox/oPizzaBox.yy) but there is no corresponding
+                 object definition.
+
+  oDeliveryBox   DOES NOT EXIST. No object or sprite by this name was found.
+
+These objects are not yet implemented. Delivery/serving is handled via
+oPizzaCompleted in CounterPizzaDelivery (see Section 5).
+
+
+=======================================================================
+SECTION 5: COUNTER / DELIVERY ROOMS — INSTANCE LAYOUT
+=======================================================================
+
+--- CounterCustomer (1366 x 768, views disabled) ---
+Source: rooms/CounterCustomer/CounterCustomer.yy
+Has room creation code: rooms/CounterCustomer/RoomCreationCode.gml
+
+  Layer: Instances (depth 0)
+    inst_54BBFA08   oNPC                x=544,  y=128   scale=(0.3, 0.3)   [has creation code]
+    inst_4ED1891F   obj_test_background x=352,  y=-64   scale=(0.208, 0.236)  [IGNORED]
+
+  Layer: Background (depth 100) — no sprite assigned
+
+NOTE: CounterCustomerDelivery does not exist as a room name. The two closest
+rooms are CounterCustomer (customer-facing) and CounterPizzaDelivery (delivery).
+
+
+--- CounterPizzaDelivery (1366 x 768, views disabled) ---
+Source: rooms/CounterPizzaDelivery/CounterPizzaDelivery.yy
+No room creation code.
+
+  Layer: Instances (depth 0)
+    inst_59826965   obj_counter_floor   x=0,   y=0     scale=(0.307, 0.219)
+    inst_6CEE1CBD   oHand               x=96,  y=160   scale=(1.0, 1.0)
+    inst_7975F299   oCursor             x=192, y=416   scale=(1.0, 1.0)    [IGNORED]
+    inst_2D7C6EE    oPizzaCompleted     x=800, y=448   scale=(1.0, 1.0)    [has creation code]
+
+  Layer: Background (depth 100) — no sprite assigned
+
+NOTE: oCursor is marked ignored (not spawned at runtime). oHand is the active
+cursor. oPizzaCompleted is the current delivery/serve placeholder object.
+
+
+=======================================================================
+SECTION 6: ARCHITECTURE DELTA — V1 vs V2
+=======================================================================
+
+  V1 (Assembly Line)              V2 (Assembly Line V2)
+  ----------------------------------------
+  Grid-based sauce/cheese         Surface-based painting (surf_sauce, surf_cheese)
+  oAssemblyTable manages pizza    oPizzaV2 is self-contained
+  oOvenStation (place pizza in)   oCookButton (click to cook)
+  oCondimentTub ingredient select Unknown — likely oBin per ingredient
+  oPizza struct (ds_grid + list)  oPizzaV2 (glob counters + surfaces)
+  paint_radius_px = 22            pizza_radius_surf = 480 (surface-space)
+  pizza_radius_px = 140           surf_size = 1500 (canvas), radius 480
+  grid cell = 12px, 23x23 grid    No grid; surfaces used directly
+  Scoring via Pizza_FinalizeScore Script may still apply; not confirmed wired
+
+
+=======================================================================
+APPENDIX: ASSEMBLY LINE V1 — FULL REFERENCE (Archived 2026-05-19)
+=======================================================================
 
 OVERVIEW
 --------
@@ -82,9 +259,9 @@ Right-click always cancels paint mode and returns to GRAB.
 COOKING MECHANIC
 -----------------
 oOvenStation tracks time with current_time:
-  < 6000ms    -> UNCOOKED
+  < 6000ms     -> UNCOOKED
   6000-11999ms -> COOKED
-  >= 12000ms  -> BURNT
+  >= 12000ms   -> BURNT
 
 Player interaction (Mouse_4 / left click on oven):
   - If empty: takes pizza from oAssemblyTable, starts timer, calls Pizza_ClearAndNew() on table
@@ -127,9 +304,9 @@ SCORING SYSTEM (Pizza_FinalizeScore)
 Called when pizza is submitted. Returns a SLICE score 0-100 and rank.
 
 Accuracy score (0-100 base):
-  Sauce:  ideal coverage = 80%, ±12% tolerance, up to -40 penalty on deviation
+  Sauce:  ideal coverage = 80%, +-12% tolerance, up to -40 penalty on deviation
           No sauce required but has >5%: -15 penalty
-  Cheese: ideal coverage = 85%, ±12% tolerance, up to -40 penalty on deviation
+  Cheese: ideal coverage = 85%, +-12% tolerance, up to -40 penalty on deviation
           No cheese required but has >5%: -15 penalty
 
 Cook state penalties:
@@ -172,8 +349,8 @@ Draw order:
 No actual grid overlay rendered in final draw -- debug overlay is in oAssemblyTable Draw_64.
 
 
-GLOBAL STATE
--------------
+GLOBAL STATE (V1)
+-----------------
 global.game_mode        "UI" or "RPG"
 global.hand_mode        HAND_MODE.GRAB or HAND_MODE.PAINT
 global.player_can_move  bool
@@ -181,8 +358,8 @@ global.return_room      room to exit to when leaving UI rooms
 global.counter_min/max_x/y  bounds for drag_bounds_mode=1
 
 
-OBJECT HIERARCHY
------------------
+OBJECT HIERARCHY (V1)
+----------------------
 oInteractable
   oCondimentTub
     oTub_Sauce
@@ -196,8 +373,8 @@ oOvenStation     (standalone, no parent)
 oHand            (standalone, no parent)
 
 
-FILE MAP
---------
+FILE MAP (V1)
+-------------
 scripts/Pizza_Constants/Pizza_Constants.gml       -- All enums
 scripts/Pizza_Create/Pizza_Create.gml             -- Pizza struct factory
 scripts/Pizza_InitGrid/Pizza_InitGrid.gml         -- Grid setup (standalone)
@@ -239,23 +416,23 @@ objects/oTub_*/Create_0.gml                       -- Each ingredient subclass
 rooms/AssemblyLine/InstanceCreationCode_inst_21A8DCFB.gml  -- Table bounds
 
 
-WHAT IS NOT YET WIRED UP
---------------------------
-- Order system: Pizza_FinalizeScore accepts an order struct but orders aren't generated
-- Delivery/serve: oServeStation exists in the project but is not integrated
+WHAT WAS NOT YET WIRED UP (V1 snapshot)
+-----------------------------------------
+- Order system: Pizza_FinalizeScore accepts an order struct but orders weren't generated
+- Delivery/serve: oServeStation existed but was not integrated
 - Result screen: no UI for displaying score/rank after submission
-- Pizza_Reset, Pizza_SetCookState, Pizza_GridMarkCircle are empty stubs
+- Pizza_Reset, Pizza_SetCookState, Pizza_GridMarkCircle were empty stubs
 
 
-KNOWN DESIGN TENSIONS (as of this snapshot)
---------------------------------------------
-- Painting is a separate mode (PAINT vs GRAB) requiring ingredient selection first.
-  This means the player can't drag the pizza while in paint mode.
-- The grid approach for coverage is accurate but has no visual output --
-  the player can't see sauce/cheese fill progress in a granular way.
-- Toppings are stamped while the table detects mouse position, not while dragging.
-  There's no "pick up pepperoni and place it" feel.
-- oOvenStation takes pizza away from table immediately on click,
+KNOWN DESIGN TENSIONS (V1 snapshot)
+-------------------------------------
+- Painting was a separate mode (PAINT vs GRAB) requiring ingredient selection first.
+  This meant the player couldn't drag the pizza while in paint mode.
+- The grid approach for coverage was accurate but had no visual output --
+  the player couldn't see sauce/cheese fill progress in a granular way.
+- Toppings were stamped while the table detected mouse position, not while dragging.
+  There was no "pick up pepperoni and place it" feel.
+- oOvenStation took pizza away from table immediately on click,
   rather than the player physically dragging the pizza to the oven.
-- The oven timer uses current_time (real elapsed ms), not a dedicated elapsed tracker,
-  which resets if the pizza is removed and replaced.
+- The oven timer used current_time (real elapsed ms), not a dedicated elapsed tracker,
+  which reset if the pizza was removed and replaced.

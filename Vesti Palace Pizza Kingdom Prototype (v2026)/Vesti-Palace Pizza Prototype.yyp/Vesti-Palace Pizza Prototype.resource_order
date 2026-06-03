@@ -158,6 +158,8 @@
     {"name":"spr_penny","order":1,"path":"sprites/spr_penny/spr_penny.yy",},
     {"name":"spr_pepperoni_burnt","order":1,"path":"sprites/spr_pepperoni_burnt/spr_pepperoni_burnt.yy",},
     {"name":"spr_pepperoni_cooked","order":2,"path":"sprites/spr_pepperoni_cooked/spr_pepperoni_cooked.yy",},
+    {"name":"spr_pizza_box_closed","order":2,"path":"sprites/spr_pizza_box_closed/spr_pizza_box_closed.yy",},
+    {"name":"spr_pizza_box_open","order":1,"path":"sprites/spr_pizza_box_open/spr_pizza_box_open.yy",},
     {"name":"spr_quarter","order":2,"path":"sprites/spr_quarter/spr_quarter.yy",},
     {"name":"spr_sauce_brush","order":3,"path":"sprites/spr_sauce_brush/spr_sauce_brush.yy",},
     {"name":"spr_sauce_burnt","order":1,"path":"sprites/spr_sauce_burnt/spr_sauce_burnt.yy",},
