@@ -1,0 +1,299 @@
+PIZZA DELIVERY — STATE & BUG INVESTIGATION
+===========================================
+Documented: 2026-06-04
+Purpose: Full code dump for oSliceScore + oCustomerDelivery, room confirmation,
+         and analysis of why the score screen may not be rendering.
+
+
+=======================================================================
+ROOM CONFIRMATION — CounterPizzaDelivery
+=======================================================================
+Source: rooms/CounterPizzaDelivery/CounterPizzaDelivery.yy
+Room size: 1366 x 768
+Views: DISABLED (enableViews: false, all views visible: false)
+Has room creation code: YES (rooms/CounterPizzaDelivery/RoomCreationCode.gml)
+
+NOTE: The room has been updated since the last snapshot (2026-06-02).
+Previously had oPizzaCompleted + single Instances layer.
+Now has two instance layers and different objects.
+
+--- Layer: Instances (depth 0) ---
+  inst_59826965   obj_counter_floor    x=0,   y=0     scale=(0.307, 0.219)  [IGNORED]
+  inst_6CEE1CBD   oHand                x=96,  y=160   scale=(1.0, 1.0)
+  inst_7975F299   oCursor              x=192, y=416   scale=(1.0, 1.0)      [IGNORED]
+  inst_6DBDD176   oSliceScore          x=960, y=384   scale=(1.0, 1.0)      ← CONFIRMED PLACED
+
+--- Layer: DeliveryBackground (depth 100) ---
+  inst_1C3458D2   obj_brickwall        x=0,   y=0     scale=(0.361, 0.220)
+  inst_34AC597    oCustomerDelivery    x=480, y=32    scale=(0.3, 0.3)
+  inst_5557CFE1   obj_counter          x=0,   y=448   scale=(0.364, 0.300)
+
+--- Layer: Background (depth 200) ---
+  No sprite assigned.
+
+Creation order:
+  obj_counter_floor → oHand → oCursor → oSliceScore →
+  obj_brickwall → obj_counter → oCustomerDelivery
+
+IMPORTANT: oPizzaCompleted is GONE from this room.
+           oPizzaBox (referenced in oCustomerDelivery Step) must spawn at runtime.
+
+
+=======================================================================
+oSliceScore — CREATE EVENT
+=======================================================================
+Source: objects/oSliceScore/Create_0.gml
+
+// No parent needed — GUI only
+depth = -200000;
+active = false;
+slice_score = 0;
+display_score = 0; // rolling number
+rank = "";
+roll_speed = 2; // how fast the number rolls up
+display_timer = 0;
+display_duration = 180; // frames to show before fading
+fade_alpha = 1;
+rank_scale = 0;
+rank_scale_target = 1;
+slam_speed = 0.15;
+
+
+=======================================================================
+oSliceScore — STEP EVENT
+=======================================================================
+Source: objects/oSliceScore/Step_0.gml
+
+if !active exit;
+
+// Slam rank letter in
+if rank_scale < rank_scale_target {
+    rank_scale += slam_speed;
+    if rank_scale > rank_scale_target + 0.1 {
+        rank_scale = rank_scale_target + 0.1; // slight overshoot
+    }
+    // Settle back
+    rank_scale = lerp(rank_scale, rank_scale_target, 0.2);
+}
+
+// Roll display number toward actual score
+if display_score < slice_score {
+    display_score = min(display_score + roll_speed, slice_score);
+}
+
+display_timer--;
+if display_timer <= 0 {
+    fade_alpha -= 0.02;
+    if fade_alpha <= 0 {
+        active = false;
+        fade_alpha = 1;
+        rank_scale = 0;
+    }
+}
+
+
+=======================================================================
+oSliceScore — DRAW GUI EVENT (Draw_64.gml)
+=======================================================================
+Source: objects/oSliceScore/Draw_64.gml
+
+if !active exit;
+
+draw_set_color(c_red);
+draw_text(100, 100, "SCORER DRAW RUNNING active:" + string(active));
+
+var _cx = display_get_gui_width() * 0.5;
+var _cy = display_get_gui_height() * 0.5;
+
+draw_set_font(fnt_dialogue);
+draw_set_halign(fa_center);
+draw_set_valign(fa_middle);
+
+// Dark overlay
+draw_set_color(c_black);
+draw_set_alpha(0.6 * fade_alpha);
+draw_rectangle(0, 0, display_get_gui_width(), display_get_gui_height(), false);
+
+// SLICE label
+draw_set_color(c_yellow);
+draw_set_alpha(fade_alpha);
+draw_text_transformed(_cx, _cy - 140, "S.L.I.C.E", 1, 1, 0);
+
+// Rolling score number
+draw_set_color(c_white);
+draw_set_alpha(fade_alpha);
+draw_text_transformed(_cx, _cy - 60, string(floor(display_score)), 1.5, 1.5, 0);
+
+// Big rank letter — slams in
+var _rank_color = c_white;
+switch (rank) {
+    case "S+": _rank_color = make_color_rgb(255, 220, 50);  break;
+    case "S":  _rank_color = make_color_rgb(255, 220, 50);  break;
+    case "A":  _rank_color = make_color_rgb(100, 255, 100); break;
+    case "B":  _rank_color = make_color_rgb(100, 200, 255); break;
+    case "C":  _rank_color = make_color_rgb(200, 200, 200); break;
+    case "F":  _rank_color = make_color_rgb(255, 80, 80);   break;
+}
+draw_set_color(_rank_color);
+draw_set_alpha(fade_alpha);
+draw_text_transformed(_cx, _cy + 60, rank, rank_scale * 4, rank_scale * 4, 0);
+
+// Continue hint
+if display_timer < 120 {
+    draw_set_color(c_white);
+    draw_set_alpha(fade_alpha * 0.6);
+    draw_text_transformed(_cx, _cy + 180, "click to continue", 1, 1, 0);
+}
+
+draw_set_alpha(1);
+draw_set_halign(fa_left);
+
+
+=======================================================================
+oCustomerDelivery — STEP EVENT
+=======================================================================
+Source: objects/oCustomerDelivery/Step_0.gml
+
+if has_pizza {
+    reset_timer++;
+    show_debug_message("reset_timer: " + string(reset_timer) + " scorer active: " + string(instance_find(oSliceScore, 0) != noone ? instance_find(oSliceScore, 0).active : "noone"));
+    // Phase 1 — brief pause before showing score (60 frames)
+    if reset_timer == 60 {
+        // Destroy the pizza box
+        var _box = instance_find(oPizzaBox, 0);
+        if instance_exists(_box) instance_destroy(_box);
+
+        // Activate scorer
+        var _scorer = instance_find(oSliceScore, 0);
+        if instance_exists(_scorer) {
+            _scorer.active = true;
+        }
+    }
+
+    // Phase 3 — reset after score display
+    if reset_timer >= reset_delay {
+        global.pizza_ready       = false;
+        global.pizza_sauce       = 0;
+        global.pizza_cheese      = 0;
+        global.pizza_cook        = 0;
+        global.pizza_toppings    = 0;
+        global.topping_depth     = 0;
+        global.hand_mode         = HAND_MODE.GRAB;
+        global.active_ingredient = INGREDIENT.NONE;
+
+        global.current_customer++;
+        if global.current_customer >= array_length(global.customer_queue) {
+            global.current_customer = 0;
+        }
+
+        room_goto(AssemblyLineV2);
+    }
+    exit;
+}
+
+// Check for pizza box drop
+var box = instance_find(oPizzaBox, 0);
+if instance_exists(box) && !box.held && box.box_state == "closed" {
+    var dx = box.x - x;
+    var dy = box.y - y;
+    if dx*dx + dy*dy < drop_radius * drop_radius {
+        has_pizza = true;
+        box.can_be_picked_up = false;
+
+        var _result = Pizza_CalcSlice(
+            global.pizza_sauce,
+            global.pizza_cheese,
+            global.pizza_cook,
+            global.pizza_toppings
+        );
+
+        // Pre-load scorer but don't activate yet
+        var _scorer = instance_find(oSliceScore, 0);
+        if instance_exists(_scorer) {
+            _scorer.slice_score   = _result.slice_score;
+            _scorer.display_score = 0;
+            _scorer.rank          = _result.rank;
+            _scorer.display_timer = 180;
+            _scorer.fade_alpha    = 1;
+            _scorer.active        = false; // activated at frame 60
+        }
+    }
+}
+
+
+=======================================================================
+BUG ANALYSIS
+=======================================================================
+
+--- Suspect 1: `if !active exit` kills the draw ---
+PARTIALLY CONFIRMED as expected behavior, but note the order:
+
+  Line 1:  if !active exit;
+  Line 3:  draw_text(100, 100, "SCORER DRAW RUNNING...")   ← debug AFTER guard
+
+The debug draw_text is AFTER the guard, so it only fires when active=true.
+If you're not seeing the red debug text, active is never reaching true.
+This narrows the bug to the flow ABOVE in oCustomerDelivery Step.
+
+
+--- Suspect 2: display_get_gui_width() returning 0 ---
+UNLIKELY to be the cause. Views are disabled (enableViews: false) but that
+does not break GUI drawing. The GUI layer always draws at window/display
+resolution. display_get_gui_width() should return 1366 (room width).
+Unless display_set_gui_size() was called somewhere with (0,0), this is fine.
+
+
+--- Most likely actual bug: reset_delay timing ---
+UNKNOWN — oCustomerDelivery Create_0.gml was not read for this snapshot.
+
+The Step has two sequential conditions inside the `has_pizza` block:
+  if reset_timer == 60  → activates scorer (Phase 1)
+  if reset_timer >= reset_delay  → room_goto(AssemblyLineV2) (Phase 3)
+
+If reset_delay is set to <= 60 in Create, both conditions fire on the
+SAME step (frame 60), and the room changes immediately after activating
+the scorer. The scorer draws for at most 1 frame — invisible in practice.
+
+The score display expects display_timer = 180 frames of visible time,
+but if reset_delay is too small the room flips before any of those frames run.
+
+CHECK: What is reset_delay initialized to in oCustomerDelivery Create_0.gml?
+It must be > 60 + (180 + fade frames) to give the scorer time to display.
+A safe value is something like 360 (60 pause + 180 display + 120 fade buffer).
+
+
+--- Secondary concern: oPizzaBox not in room ---
+oPizzaBox is not placed in CounterPizzaDelivery. The Step looks for it via
+instance_find(oPizzaBox, 0). It must be spawned by the player carrying it
+from AssemblyLineV2 — either via a persistent flag, room creation code, or
+the player physically transitioning with it.
+
+If oPizzaBox never spawns, `has_pizza` is never set true, the scorer is never
+pre-loaded, and the whole flow stalls silently (no error, just nothing happens).
+
+CHECK: rooms/CounterPizzaDelivery/RoomCreationCode.gml — does it spawn oPizzaBox?
+CHECK: Does AssemblyLineV2 transition code pass pizza data to CounterPizzaDelivery?
+
+
+--- display_timer flow note ---
+oCustomerDelivery sets _scorer.display_timer = 180 before activation.
+oSliceScore Step decrements display_timer every frame WHILE active.
+After 180 frames the fade begins. After fade completes, active → false.
+This is clean. The problem is upstream (has_pizza trigger or reset_delay).
+
+
+=======================================================================
+WHAT TO CHECK NEXT
+=======================================================================
+1. oCustomerDelivery/Create_0.gml — what is reset_delay set to?
+   If <= 60, the room transitions before the score screen ever shows.
+
+2. rooms/CounterPizzaDelivery/RoomCreationCode.gml — does oPizzaBox spawn here?
+   If not, the pizza drop detection never fires and has_pizza stays false.
+
+3. Add a temp draw_text to Draw GUI BEFORE the `if !active exit` guard:
+     draw_text(10, 10, "oSliceScore alive, active=" + string(active));
+   This will confirm whether the object is drawing at all vs. active being wrong.
+
+4. Confirm global.pizza_ready / global.pizza_sauce etc. are non-zero when
+   arriving in CounterPizzaDelivery — Pizza_CalcSlice depends on these globals.

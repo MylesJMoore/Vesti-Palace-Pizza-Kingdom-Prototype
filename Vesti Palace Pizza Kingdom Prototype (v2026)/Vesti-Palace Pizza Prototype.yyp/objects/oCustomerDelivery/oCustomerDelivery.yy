@@ -1,15 +1,17 @@
 {
   "$GMObject":"",
-  "%Name":"obj_counter",
+  "%Name":"oCustomerDelivery",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_counter",
+  "name":"oCustomerDelivery",
   "overriddenProperties":[],
   "parent":{
-    "name":"Environment",
-    "path":"folders/Objects/Environment.yy",
+    "name":"Objects",
+    "path":"folders/Assembly Line Delivery/Objects.yy",
   },
   "parentObjectId":null,
   "persistent":false,
@@ -30,8 +32,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_counter",
-    "path":"sprites/spr_counter/spr_counter.yy",
+    "name":"spr_guramahsh",
+    "path":"sprites/spr_guramahsh/spr_guramahsh.yy",
   },
   "spriteMaskId":null,
   "visible":true,

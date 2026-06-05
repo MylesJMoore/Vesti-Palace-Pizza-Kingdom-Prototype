@@ -36,3 +36,10 @@ global.topping_depth = 0;
 //Customers
 global.customer_queue = ["counter_customer", "counter_customer_2"];
 global.current_customer = 0;
+
+//Pizza Delivery
+global.pizza_ready    = false;
+global.pizza_sauce    = 0;
+global.pizza_cheese   = 0;
+global.pizza_cook     = 0;
+global.pizza_toppings = 0;
