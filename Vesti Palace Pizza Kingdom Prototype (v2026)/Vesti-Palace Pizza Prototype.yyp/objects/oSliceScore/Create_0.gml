@@ -1,13 +1,19 @@
-// No parent needed — GUI only
 depth = -200000;
 active = false;
 slice_score = 0;
-display_score = 0; // rolling number
+display_score = 0;
 rank = "";
-roll_speed = 2; // how fast the number rolls up
+roll_speed = 2;
 display_timer = 0;
-display_duration = 180; // frames to show before fading
+display_duration = 180;
 fade_alpha = 1;
 rank_scale = 0;
 rank_scale_target = 1;
 slam_speed = 0.15;
+show_timer = 0;
+show_continue = false;
+rank_wobble = 0;
+
+// Confetti particles
+confetti = [];
+confetti_active = false;

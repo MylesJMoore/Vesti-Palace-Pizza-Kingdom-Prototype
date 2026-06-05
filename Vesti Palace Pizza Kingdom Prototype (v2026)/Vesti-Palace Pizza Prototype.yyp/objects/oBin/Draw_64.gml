@@ -1,4 +1,5 @@
 // TESTING
+/*
 draw_set_color(c_white);
 draw_text(24, 460, "Active Ingredient: " + string(global.active_ingredient));
 draw_text(24, 480, "Hand Mode: " + string(global.hand_mode));
@@ -20,3 +21,4 @@ if (instance_exists(t)) {
     draw_text(24, 600, "Topping depth: " + string(t.depth));
 }
 draw_text(24, 620, "Hand depth: " + string(oHand.depth));
+*/
