@@ -27,6 +27,7 @@ if box_state == "open" && !held {
                 depth = -99997;
                 can_be_picked_up = true;
                 can_be_clicked = false;
+				screen_shake(6, 12); 
                 
                 // Store score data
                 global.pizza_sauce    = pizza.sauce_globs;

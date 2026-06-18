@@ -22,3 +22,8 @@ y = 475;
 // room-entry safety
 input_lock_frames = 0;
 await_mouse_release = false;
+
+//Shake
+shake_intensity = 0;
+shake_duration  = 0;
+shake_timer     = 0;

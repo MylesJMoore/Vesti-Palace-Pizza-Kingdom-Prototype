@@ -18,5 +18,11 @@ on_clicked = function() {
         is_selected = true;
         global.hand_mode = HAND_MODE.PAINT;
         global.active_ingredient = ingredient_type;
+		pulse_timer = 8;
     }
 };
+
+//Pulsing
+pulse_timer = 0;
+base_xscale = image_xscale;
+base_yscale = image_yscale;

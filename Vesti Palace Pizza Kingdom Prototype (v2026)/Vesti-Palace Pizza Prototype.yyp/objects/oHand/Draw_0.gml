@@ -1,3 +1,13 @@
+// Screen shake — offset the cursor draw position
+var _shake_x = 0;
+var _shake_y = 0;
+if shake_timer > 0 {
+    shake_timer--;
+    var _falloff = shake_timer / shake_duration;
+    _shake_x = random_range(-shake_intensity, shake_intensity) * _falloff;
+    _shake_y = random_range(-shake_intensity, shake_intensity) * _falloff;
+}
+
 var spr = spr_cursor_default;
 
 if (global.hand_mode == HAND_MODE.PAINT) {

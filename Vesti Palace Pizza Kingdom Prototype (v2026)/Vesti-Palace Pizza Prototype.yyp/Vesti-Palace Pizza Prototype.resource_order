@@ -78,6 +78,7 @@
     {"name":"oCookButton","order":4,"path":"objects/oCookButton/oCookButton.yy",},
     {"name":"oCustomerDelivery","order":1,"path":"objects/oCustomerDelivery/oCustomerDelivery.yy",},
     {"name":"oGlob","order":3,"path":"objects/oGlob/oGlob.yy",},
+    {"name":"oGlobSplat","order":5,"path":"objects/oGlobSplat/oGlobSplat.yy",},
     {"name":"oHand","order":2,"path":"objects/oHand/oHand.yy",},
     {"name":"oInteractable","order":1,"path":"objects/oInteractable/oInteractable.yy",},
     {"name":"oKey","order":1,"path":"objects/oKey/oKey.yy",},

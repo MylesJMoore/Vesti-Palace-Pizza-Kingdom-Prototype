@@ -14,6 +14,12 @@ drag_bounds_mode = 0;
 variant = irandom(1); // for mushroom L/R
 // glass and others override this in oHand when spawning
 
+//Sprite
 image_xscale = 0.3;
 image_yscale = 0.3;
 image_angle = random(360); // random starting rotation for fun
+
+//Squish
+squish_timer = 0;
+base_xscale = image_xscale;
+base_yscale = image_yscale;

@@ -1,3 +1,18 @@
+// GUI shake offset
+var _shake_x = 0;
+var _shake_y = 0;
+var _hand = instance_find(oHand, 0);
+if instance_exists(_hand) && _hand.shake_timer > 0 {
+    var _falloff = _hand.shake_timer / _hand.shake_duration;
+    _shake_x = random_range(-_hand.shake_intensity, _hand.shake_intensity) * _falloff;
+    _shake_y = random_range(-_hand.shake_intensity, _hand.shake_intensity) * _falloff;
+}
+
+// Then offset _cx and _cy by shake
+var _cx = display_get_gui_width() * 0.5 + _shake_x;
+var _cy = display_get_gui_height() * 0.5 + _shake_y;
+
+// Scoring
 var _scorer = instance_find(oSliceScore, 0);
 if !instance_exists(_scorer) exit;
 if !_scorer.active exit;
@@ -91,6 +106,14 @@ if _scorer.show_continue {
             draw_text_transformed(_cx, _cy + 60, _scorer.rank, _scorer.rank_scale * 4, _scorer.rank_scale * 4, 0);
             break;
     }
+	
+	// White flash overlay on rank reveal
+	if _scorer.rank_flash > 0 {
+	    draw_set_color(c_white);
+	    draw_set_alpha(_scorer.rank_flash);
+	    draw_rectangle(0, 0, display_get_gui_width(), display_get_gui_height(), false);
+	    draw_set_alpha(1);
+	}
 }
 
 // Phase messages

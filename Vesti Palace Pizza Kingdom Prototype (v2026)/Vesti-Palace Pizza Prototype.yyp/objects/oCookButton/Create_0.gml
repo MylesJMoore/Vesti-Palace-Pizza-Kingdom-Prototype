@@ -12,4 +12,5 @@ on_clicked = function(self_ref) {
     
     pizza.cook_state = self_ref.cook_stage;
     Pizza_Cook(pizza);
+	screen_shake(8, 15);
 };

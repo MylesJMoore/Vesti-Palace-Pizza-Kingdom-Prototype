@@ -13,6 +13,7 @@ slam_speed = 0.15;
 show_timer = 0;
 show_continue = false;
 rank_wobble = 0;
+rank_flash = 0; // counts down from 1 to 0
 
 // Confetti particles
 confetti = [];

@@ -1,4 +1,19 @@
 // --------------------------------------------------
+// Screen Shake 
+// --------------------------------------------------
+if shake_timer > 0 {
+    shake_timer--;
+    var _falloff = shake_timer / shake_duration;
+    var _ox = random_range(-shake_intensity, shake_intensity) * _falloff;
+    var _oy = random_range(-shake_intensity, shake_intensity) * _falloff;
+    var _cam = view_camera[0];
+    camera_set_view_pos(_cam,
+        camera_get_view_x(_cam) + _ox,
+        camera_get_view_y(_cam) + _oy
+    );
+}
+
+// --------------------------------------------------
 // Position hand in room space
 // --------------------------------------------------
 depth = -100000;
@@ -124,6 +139,11 @@ if (mouse_check_button_released(mb_left)) {
 
             dropped.held = false;
             dropped.depth = -100;
+			
+			// Squish on drop if it's a pizza
+			if object_is_ancestor(dropped.object_index, oPizzaV2) || dropped.object_index == oPizzaV2 {
+			    dropped.squish_timer = 12;
+			}
         }
 
         held_item = noone;
@@ -176,11 +196,47 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 					    t.ingredient_type = global.active_ingredient;
 					    t.depth = -500 - global.topping_depth; // newest topping always on top
 					    global.topping_depth++;
+						t.squish_timer = 10; 
 					    switch (global.active_ingredient) {
 					        case INGREDIENT.MUSHROOM: t.variant = irandom(1); break;
 					        case INGREDIENT.GLASS:    t.variant = irandom(7); break;
 					        default: t.variant = 0; break;
 					    }
+						
+						// Splat color per topping type
+					    var _topping_col = c_white;
+					    switch (global.active_ingredient) {
+					        case INGREDIENT.PEPPERONI: _topping_col = make_color_rgb(180, 30, 30);  break; // dark red
+					        case INGREDIENT.MUSHROOM:  _topping_col = make_color_rgb(100, 200, 120); break; // green
+					        case INGREDIENT.GLASS:     _topping_col = make_color_rgb(80, 150, 255);  break; // blue
+					    }
+						
+						//TOPPING SPLAT CREATION
+						// GLASS
+					    if global.active_ingredient == INGREDIENT.GLASS {
+						    repeat(7) {
+						        var _s = instance_create_layer(x, y, "Instances", oGlobSplat);
+						        _s.col = make_color_rgb(80, 150, 255);
+						        _s.depth = -600;
+						        _s.vx = random_range(-10, 10);
+						        _s.vy = random_range(-12, -5);
+						        _s.size = random_range(8, 16);
+						        _s.life = 32;
+						        _s.max_life = 32;
+						    }
+						} else {
+							// PEPPERONI, MUSHROOMS
+						    repeat(5) {
+						        var _s = instance_create_layer(x, y, "Instances", oGlobSplat);
+						        _s.col = _topping_col;
+						        _s.depth = -600;
+						        _s.vx = random_range(-8, 8);
+						        _s.vy = random_range(-10, -4);
+						        _s.size = random_range(7, 14);
+						        _s.life = 28;
+						        _s.max_life = 28;
+						    }
+						}
 					}
 		        }
 		    }
@@ -212,6 +268,17 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 		                }
 		            }
 		        }
+		    }
+		}
+		
+		// Spawn splat particles for sauce/cheese
+		if global.active_ingredient == INGREDIENT.SAUCE || global.active_ingredient == INGREDIENT.CHEESE {
+		    var _splat_col = (global.active_ingredient == INGREDIENT.SAUCE) 
+		                     ? make_color_rgb(200, 50, 30) 
+		                     : make_color_rgb(240, 200, 50);
+		    repeat(4) {
+		        var _s = instance_create_layer(x, y, "Instances", oGlobSplat);
+		        _s.col = _splat_col;
 		    }
 		}
 

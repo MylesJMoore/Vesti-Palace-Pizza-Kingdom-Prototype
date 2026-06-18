@@ -20,16 +20,34 @@ if rank == "F-" || rank == "F" || rank == "F+"
     rank_wobble += 0.15;
 }
 
+// Pulse for A
+if rank == "A" {
+    rank_wobble += 0.08;
+}
+
+// Pulse for S
+if rank == "S" {
+    rank_wobble += 0.12;
+}
+
 // Pulse for S+
 if rank == "S+" {
-    rank_wobble += 0.08;
+    rank_wobble += 0.16;
 }
 
 // Show timer
 show_timer++;
 if show_timer >= 300 && !show_continue {
     show_continue = true;
-    rank_scale = 0; // reset so it slams in fresh on reveal
+    rank_scale = 0;
+    rank_flash = 1;
+    screen_shake(12, 20);
+}
+
+// Fade flash
+if rank_flash > 0 {
+    rank_flash -= 0.05;
+    if rank_flash < 0 rank_flash = 0;
 }
 
 // Spawn confetti once for A and above

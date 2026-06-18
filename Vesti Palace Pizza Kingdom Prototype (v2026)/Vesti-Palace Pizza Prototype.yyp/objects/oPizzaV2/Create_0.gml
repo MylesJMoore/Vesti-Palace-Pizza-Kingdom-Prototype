@@ -43,3 +43,6 @@ surf_sauce  = -1;
 surf_cheese = -1;
 surf_size = 1500;
 pizza_radius_surf = 480;
+
+//Squish
+squish_timer = 0;
