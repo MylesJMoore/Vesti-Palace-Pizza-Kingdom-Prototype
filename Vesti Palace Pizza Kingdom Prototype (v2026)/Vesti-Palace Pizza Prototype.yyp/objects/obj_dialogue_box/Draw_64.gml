@@ -14,11 +14,17 @@ var _bx = _box_margin;
 var _bw = _gui_w - (_box_margin * 2);
 var _bh = box_h;
 
+var _target_by;
 if box_position == "top" {
-    var _by = _box_margin;
+    _target_by = _box_margin;
 } else {
-    var _by = _gui_h - box_h - _box_margin;
+    _target_by = _gui_h - box_h - _box_margin;
 }
+
+// Slide in from off screen
+var _ease = 1 - power(1 - slide_progress, 3); // ease-out cubic
+var _start_by = (box_position == "top") ? (-box_h) : (_gui_h + box_h);
+var _by = lerp(_start_by, _target_by, _ease);
 #endregion
 
 #region Draw Box Background

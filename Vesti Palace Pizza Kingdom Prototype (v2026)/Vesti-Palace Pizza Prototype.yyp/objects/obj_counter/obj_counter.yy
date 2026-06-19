@@ -9,8 +9,8 @@
   "name":"obj_counter",
   "overriddenProperties":[],
   "parent":{
-    "name":"Environment",
-    "path":"folders/Objects/Environment.yy",
+    "name":"Objects",
+    "path":"folders/Assembly Line Delivery/Objects.yy",
   },
   "parentObjectId":null,
   "persistent":false,

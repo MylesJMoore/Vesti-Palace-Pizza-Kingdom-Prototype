@@ -35,3 +35,10 @@ if is_choice && choice_style == "horizontal_extended" {
     }
 }
 #endregion
+
+#region Dialogue Box Slide
+if slide_progress < 1 {
+    slide_progress += slide_speed;
+    if slide_progress > 1 slide_progress = 1;
+}
+#endregion

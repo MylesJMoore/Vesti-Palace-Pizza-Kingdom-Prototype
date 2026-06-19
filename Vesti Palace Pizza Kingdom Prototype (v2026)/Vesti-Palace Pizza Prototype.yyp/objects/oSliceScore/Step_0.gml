@@ -50,17 +50,18 @@ if rank_flash > 0 {
     if rank_flash < 0 rank_flash = 0;
 }
 
-// Spawn confetti once for A and above
 if show_continue && !confetti_active {
-    if rank == "S+" || rank == "S" || rank == "A" || rank == "F-" {
+    if rank == "S+" || rank == "S" || rank == "A" || rank == "F+" || rank == "F" || rank == "F-" {
         confetti_active = true;
         confetti = [];
         for (var _i = 0; _i < 60; _i++) {
+            var _angle = random(360);
+            var _speed = random_range(3, 9);
             var _p = {
-                x: random(1920),
-                y: random_range(-100, 0),
-                vx: random_range(-2, 2),
-                vy: random_range(3, 8),
+                x: 960,
+                y: 540,
+                vx: lengthdir_x(_speed, _angle),
+                vy: lengthdir_y(_speed, _angle) - 4,
                 col: choose(
                     make_color_rgb(255, 220, 50),
                     make_color_rgb(100, 255, 100),
@@ -74,12 +75,32 @@ if show_continue && !confetti_active {
             };
             array_push(confetti, _p);
         }
+        
+        // Extra gold burst for S+
+        if rank == "S+" {
+            for (var _i = 0; _i < 40; _i++) {
+                var _angle = random(360);
+                var _speed = random_range(5, 12);
+                var _p = {
+                    x: 960,
+                    y: 540,
+                    vx: lengthdir_x(_speed, _angle),
+                    vy: lengthdir_y(_speed, _angle) - 6,
+                    col: make_color_rgb(255, 220, 50),
+                    size: random_range(8, 16),
+                    rot: random(360),
+                    rot_speed: random_range(-8, 8)
+                };
+                array_push(confetti, _p);
+            }
+        }
     }
 }
 
-// Update confetti
+// Update confetti with gravity
 if confetti_active {
     for (var _i = 0; _i < array_length(confetti); _i++) {
+        confetti[_i].vy += 0.15;
         confetti[_i].x  += confetti[_i].vx;
         confetti[_i].y  += confetti[_i].vy;
         confetti[_i].rot += confetti[_i].rot_speed;

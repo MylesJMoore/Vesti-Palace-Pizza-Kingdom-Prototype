@@ -1,6 +1,10 @@
 if !instance_exists(obj_dialogue_manager) exit;
 var _mgr = obj_dialogue_manager;
 
+//NPC Idle Bob
+bob_phase += bob_speed;
+y = base_y + sin(bob_phase) * bob_amount;
+
 // -------------------------
 // JUST ENDED GUARD
 // Prevents same E press that ended dialogue from re-triggering it

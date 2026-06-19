@@ -1,3 +1,7 @@
+// Customer Idle Bob
+bob_phase += bob_speed;
+y = base_y + sin(bob_phase) * bob_amount;
+
 if has_pizza {
     reset_timer++;
     

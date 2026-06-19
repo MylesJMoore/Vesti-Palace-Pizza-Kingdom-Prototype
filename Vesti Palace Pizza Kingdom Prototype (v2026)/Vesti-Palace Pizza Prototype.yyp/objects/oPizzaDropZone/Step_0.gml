@@ -1,5 +1,17 @@
 if has_pizza exit;
 
+// Delivery Zone Flash
+pulse_phase += 0.05;
+flash_alpha = 1;
+flash_radius = drop_radius;
+
+if flash_alpha > 0 {
+    flash_alpha -= 0.03;
+    flash_radius += 4;
+    if flash_alpha < 0 flash_alpha = 0;
+}
+
+// Delivery Calculation
 var box = instance_find(oPizzaBox, 0);
 if instance_exists(box) && !box.held && box.box_state == "closed" {
     var dx = box.x - x;

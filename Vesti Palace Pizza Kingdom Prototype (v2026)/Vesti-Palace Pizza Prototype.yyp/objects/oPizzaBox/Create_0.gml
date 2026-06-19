@@ -1,5 +1,5 @@
 event_inherited();
-
+// Initialization Variables
 can_be_picked_up = false;
 can_be_clicked = true;
 drag_bounds_mode = 0;
@@ -16,4 +16,13 @@ pizza_ref = noone;
 // Snap detection radius in world px
 snap_radius = 100;
 
-sprite_index = spr_pizza_box_open; // swap for your open box sprite
+// Box Open Sprite
+sprite_index = spr_pizza_box_open;
+
+// Box Snap Hint
+hint_pulse = 0;
+
+// Spot Light
+sparkle_timer = 0;
+glow_intensity = 30;
+glow_distance_radius = 20;

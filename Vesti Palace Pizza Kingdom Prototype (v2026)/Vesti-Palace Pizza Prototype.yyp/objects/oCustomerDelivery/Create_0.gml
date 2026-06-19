@@ -6,3 +6,10 @@ reset_timer = 0;
 reset_delay = 360; // 6 seconds before room reset
 image_xscale = 0.3;
 image_yscale = 0.3;
+
+
+//Customer Idle Bob
+bob_phase = 0;
+bob_speed = 0.04;
+bob_amount = 3;
+base_y = y;

@@ -51,3 +51,8 @@ choice_typewriter_index = 0;
 choice_typewriter_timer = 0;
 choice_typewriter_speed = 2;
 #endregion
+
+#region Dialogue Slide
+slide_progress = 1; // 0 = off screen, 1 = fully in place
+slide_speed = 0.07; //Lower Number = slower speed
+#endregion
