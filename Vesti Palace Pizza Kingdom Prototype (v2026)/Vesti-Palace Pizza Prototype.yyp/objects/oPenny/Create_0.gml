@@ -6,3 +6,6 @@ max_speed     = 21;
 drag_friction_x = 0.82;
 drag_friction_y = 0.82;
 slide = 0.94;
+
+//Value
+coin_value = 1;

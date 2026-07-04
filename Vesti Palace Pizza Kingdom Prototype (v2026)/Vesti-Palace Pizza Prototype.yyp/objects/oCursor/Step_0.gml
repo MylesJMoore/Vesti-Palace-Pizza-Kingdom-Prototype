@@ -25,6 +25,9 @@ if (mouse_check_button_pressed(mb_left)) {
 
         // bring held item above most things
         held_item.depth = -99999;
+		
+		//Play SFX
+		sfx_play(snd_sfx_grab, true, 0.7);
     }
 }
 

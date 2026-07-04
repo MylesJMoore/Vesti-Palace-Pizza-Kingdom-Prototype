@@ -19,85 +19,131 @@ if rank == "F-" || rank == "F" || rank == "F+"
 || rank == "D-" || rank == "D" || rank == "D+" {
     rank_wobble += 0.15;
 }
-
-// Pulse for A
-if rank == "A" {
+if rank == "S+" {
     rank_wobble += 0.08;
 }
 
-// Pulse for S
-if rank == "S" {
-    rank_wobble += 0.12;
-}
-
-// Pulse for S+
-if rank == "S+" {
-    rank_wobble += 0.16;
-}
-
-// Show timer
+// Show timer + reveal trigger
 show_timer++;
 if show_timer >= 300 && !show_continue {
     show_continue = true;
     rank_scale = 0;
     rank_flash = 1;
     screen_shake(12, 20);
+    if rank == "S+" || rank == "S" || rank == "A" {
+        jukebox_play(snd_music_victory);
+    } else if rank == "B" || rank == "C" {
+        jukebox_play(snd_sfx_cheer_small);
+    } else {
+        jukebox_play(snd_sfx_groan);
+    }
 }
 
-// Fade flash
+// Fade rank flash
 if rank_flash > 0 {
     rank_flash -= 0.05;
     if rank_flash < 0 rank_flash = 0;
 }
 
-if show_continue && !confetti_active {
-    if rank == "S+" || rank == "S" || rank == "A" || rank == "F+" || rank == "F" || rank == "F-" {
-        confetti_active = true;
-        confetti = [];
-        for (var _i = 0; _i < 60; _i++) {
-            var _angle = random(360);
-            var _speed = random_range(3, 9);
-            var _p = {
-                x: 960,
-                y: 540,
-                vx: lengthdir_x(_speed, _angle),
-                vy: lengthdir_y(_speed, _angle) - 4,
-                col: choose(
-                    make_color_rgb(255, 220, 50),
-                    make_color_rgb(100, 255, 100),
-                    make_color_rgb(100, 200, 255),
-                    c_white,
-                    make_color_rgb(255, 100, 200)
-                ),
-                size: random_range(6, 14),
-                rot: random(360),
-                rot_speed: random_range(-5, 5)
-            };
-            array_push(confetti, _p);
-        }
-        
-        // Extra gold burst for S+
-        if rank == "S+" {
-            for (var _i = 0; _i < 40; _i++) {
+// Fade tier-up flash
+if tier_up_flash > 0 {
+    tier_up_flash -= 0.03;
+    if tier_up_flash < 0 tier_up_flash = 0;
+}
+
+// Count down tier banner
+if tier_banner_timer > 0 {
+    tier_banner_timer--;
+}
+
+// Spring earnings pop back down
+if earnings_pop > 1 {
+    earnings_pop = lerp(earnings_pop, 1, 0.15);
+}
+
+// Apply rewards once, shortly after reveal
+if show_continue && !rewards_applied {
+    scoops_fly_timer++;
+    if scoops_fly_timer >= 40 {
+        rewards_applied = true;
+        earnings_pop = 1.6;
+        earnings_shown = true;
+
+        // Money
+        global.money += money_earned;
+		
+        // Scoops (capped at 800)
+        var _before = global.scoops;
+        global.scoops = min(global.scoops + scoops_earned, 800);
+
+        // Tier tick-over check
+        var _tier_before = floor(_before / 100);
+        var _tier_after  = floor(global.scoops / 100);
+        if _tier_after > _tier_before {
+            tier_up_flash = 1;
+            tier_banner_timer = 180;
+            screen_shake(15, 25);
+
+            // Pull tier title/rank from HUD
+            var _hud = instance_find(oHUD, 0);
+            if instance_exists(_hud) {
+                tier_banner_title = _hud.scoops_titles[_tier_after];
+                tier_banner_rank  = _hud.scoops_ranks[_tier_after];
+            }
+
+            // Tier-up sound
+            jukebox_play(snd_sfx_tier_up);
+
+            // Big confetti burst
+            for (var _i = 0; _i < 80; _i++) {
                 var _angle = random(360);
-                var _speed = random_range(5, 12);
+                var _speed = random_range(4, 12);
                 var _p = {
-                    x: 960,
-                    y: 540,
+                    x: 960, y: 300,
                     vx: lengthdir_x(_speed, _angle),
                     vy: lengthdir_y(_speed, _angle) - 6,
-                    col: make_color_rgb(255, 220, 50),
-                    size: random_range(8, 16),
+                    col: choose(
+                        make_color_rgb(255, 220, 50),
+                        make_color_rgb(100, 255, 100),
+                        make_color_rgb(100, 200, 255),
+                        c_white
+                    ),
+                    size: random_range(6, 14),
                     rot: random(360),
                     rot_speed: random_range(-8, 8)
                 };
                 array_push(confetti, _p);
             }
+            confetti_active = true;
         }
+
+        // Earnings burst from random screen spots
+        for (var _i = 0; _i < 30; _i++) {
+            var _p = {
+                x: random(1920),
+                y: random_range(400, 800),
+                vx: random_range(-3, 3),
+                vy: random_range(-8, -3),
+                col: choose(
+                    make_color_rgb(100, 255, 100),
+                    make_color_rgb(255, 220, 50)
+                ),
+                size: random_range(5, 12),
+                rot: random(360),
+                rot_speed: random_range(-6, 6)
+            };
+            array_push(confetti, _p);
+        }
+        confetti_active = true;
+
+        // Store last grade for HUD
+        global.last_slice_score = slice_score;
+        global.last_rank = rank;
+        global.pizzas_made++;
     }
 }
 
-// Update confetti with gravity
+// Update confetti
 if confetti_active {
     for (var _i = 0; _i < array_length(confetti); _i++) {
         confetti[_i].vy += 0.15;

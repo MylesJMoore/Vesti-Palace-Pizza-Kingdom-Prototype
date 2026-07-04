@@ -80,6 +80,9 @@ if (mouse_check_button_pressed(mb_left)) {
             // enlarge slightly while holding
             //held_item.image_xscale = held_item.base_xscale + .7;
             //held_item.image_yscale = held_item.base_yscale + .7;
+			
+			//Play SFX
+			sfx_play(snd_sfx_grab, true, 0.7);
         }
     }
 }
@@ -188,7 +191,17 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 		                case INGREDIENT.GLASS:     limit = pizza.max_glass;     break;
 		            }
             
+					// Create Topping
 		            if (current_count < limit) {
+						//Play SFX
+						switch (global.active_ingredient) {
+			                case INGREDIENT.PEPPERONI: sfx_play(snd_sfx_topping_pepperoni, true, 0.8); break;
+			                case INGREDIENT.MUSHROOM:  sfx_play(snd_sfx_topping_mushroom, true, 0.8);  break;
+			                case INGREDIENT.GLASS:     sfx_play(snd_sfx_topping_glass, true, 0.8);     break;
+			            }
+						
+						
+						//Create Topping
 					    var t = instance_create_layer(x, y, "Instances", oTopping);
 					    t.parent_pizza = pizza;
 					    t.local_x = x - pizza.x;
@@ -268,6 +281,26 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 		                }
 		            }
 		        }
+		    }
+		}
+		
+		// Manage looping paint sound
+		var _is_painting_now = mouse_check_button(mb_left) 
+		    && (global.active_ingredient == INGREDIENT.SAUCE || global.active_ingredient == INGREDIENT.CHEESE)
+		    && (pizza != noone);
+
+		if _is_painting_now {
+		    // Start loop if not already playing
+		    if paint_loop_snd == noone || !audio_is_playing(paint_loop_snd) {
+		        var _snd = (global.active_ingredient == INGREDIENT.SAUCE) ? snd_sfx_sauce : snd_sfx_cheese;
+		        paint_loop_snd = audio_play_sound(_snd, 5, true); // looping
+		        audio_sound_gain(paint_loop_snd, 1, 0);
+		    }
+		} else {
+		    // Stop loop when not painting
+		    if paint_loop_snd != noone && audio_is_playing(paint_loop_snd) {
+		        audio_stop_sound(paint_loop_snd);
+		        paint_loop_snd = noone;
 		    }
 		}
 		

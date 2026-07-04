@@ -1,5 +1,8 @@
 depth = -100000;
 
+//SFX
+paint_loop_snd = noone;
+
 // Cursor State
 cursor_state = 0;
 

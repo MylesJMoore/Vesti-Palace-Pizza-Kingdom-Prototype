@@ -78,6 +78,9 @@ if box_state == "open" && !held {
                 global.pizza_cook     = pizza.cook_state;
                 global.pizza_toppings = instance_number(oTopping);
                 global.pizza_ready    = true;
+				
+				//Play SFX
+				sfx_play(snd_sfx_pizza_done, false, 1);
             }
         }
     }

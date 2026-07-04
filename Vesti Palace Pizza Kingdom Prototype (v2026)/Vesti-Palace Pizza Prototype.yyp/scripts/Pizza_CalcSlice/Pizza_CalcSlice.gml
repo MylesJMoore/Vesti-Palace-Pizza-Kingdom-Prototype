@@ -41,5 +41,13 @@ function Pizza_CalcSlice(sauce_globs, cheese_globs, cook_state, topping_count) {
     else if _score >= 10 _rank = "F";
     // 0-9 = F-
     
-    return { slice_score: _score, rank: _rank };
+    var _scoops_earned = floor(_score / 10);        // 0-10 per pizza
+	var _money_earned  = 5 + floor(_score * 0.5);   // base $5 + tip
+
+	return { 
+	    slice_score: _score, 
+	    rank: _rank,
+	    scoops_earned: _scoops_earned,
+	    money_earned: _money_earned
+	};
 }

@@ -18,3 +18,18 @@ rank_flash = 0; // counts down from 1 to 0
 // Confetti particles
 confetti = [];
 confetti_active = false;
+
+//HUD
+scoops_earned = 0;
+money_earned = 0;
+rewards_applied = false;
+scoops_fly = 0;       // animates the +X flying in
+scoops_fly_timer = 0;
+tier_up_flash = 0;
+earnings_pop = 0;
+earnings_shown = false;
+
+//Tier-Up Fanfare
+tier_banner_timer = 0;
+tier_banner_title = "";
+tier_banner_rank = "";

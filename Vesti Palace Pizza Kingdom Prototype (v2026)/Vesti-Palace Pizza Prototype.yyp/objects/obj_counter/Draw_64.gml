@@ -1,18 +1,3 @@
-// GUI shake offset
-var _shake_x = 0;
-var _shake_y = 0;
-var _hand = instance_find(oHand, 0);
-if instance_exists(_hand) && _hand.shake_timer > 0 {
-    var _falloff = _hand.shake_timer / _hand.shake_duration;
-    _shake_x = random_range(-_hand.shake_intensity, _hand.shake_intensity) * _falloff;
-    _shake_y = random_range(-_hand.shake_intensity, _hand.shake_intensity) * _falloff;
-}
-
-// Then offset _cx and _cy by shake
-var _cx = display_get_gui_width() * 0.5 + _shake_x;
-var _cy = display_get_gui_height() * 0.5 + _shake_y;
-
-// Scoring
 var _scorer = instance_find(oSliceScore, 0);
 if !instance_exists(_scorer) exit;
 if !_scorer.active exit;
@@ -36,14 +21,9 @@ if _scorer.confetti_active {
         var _p = _conf[_i];
         draw_set_color(_p.col);
         draw_set_alpha(0.9);
-        draw_rectangle(
-            _p.x - _p.size,
-            _p.y - _p.size,
-            _p.x + _p.size,
-            _p.y + _p.size,
-            false
-        );
+        draw_rectangle(_p.x - _p.size, _p.y - _p.size, _p.x + _p.size, _p.y + _p.size, false);
     }
+    draw_set_alpha(1);
 }
 
 // SLICE label
@@ -61,7 +41,7 @@ if !_scorer.show_continue {
     draw_text_transformed(_cx, _cy - 60, string(floor(_scorer.display_score)), 1.5, 1.5, 0);
 }
 
-// Rank — only show after show_continue
+// Rank — only after show_continue
 if _scorer.show_continue {
     var _rank_color = c_white;
     switch (_scorer.rank) {
@@ -88,37 +68,34 @@ if _scorer.show_continue {
             var _sy = (_cy + 60) + random_range(-10, 10);
             draw_text_transformed(_sx, _sy, _scorer.rank, _scorer.rank_scale * 4, _scorer.rank_scale * 4, random_range(-5, 5));
             break;
-
         case "D-":
         case "D":
         case "D+":
             var _wa = sin(_scorer.rank_wobble) * 10;
             draw_text_transformed(_cx, _cy + 60, _scorer.rank, _scorer.rank_scale * 4, _scorer.rank_scale * 4, _wa);
             break;
-
         case "S+":
             var _pulse = 1 + sin(_scorer.rank_wobble * 2) * 0.12;
             var _spin  = sin(_scorer.rank_wobble) * 3;
             draw_text_transformed(_cx, _cy + 60, _scorer.rank, _scorer.rank_scale * 4 * _pulse, _scorer.rank_scale * 4 * _pulse, _spin);
             break;
-
         default:
             draw_text_transformed(_cx, _cy + 60, _scorer.rank, _scorer.rank_scale * 4, _scorer.rank_scale * 4, 0);
             break;
     }
-	
-	// White flash overlay on rank reveal
-	if _scorer.rank_flash > 0 {
-	    draw_set_color(c_white);
-	    draw_set_alpha(_scorer.rank_flash);
-	    draw_rectangle(0, 0, display_get_gui_width(), display_get_gui_height(), false);
-	    draw_set_alpha(1);
-	}
+
+    // White flash on reveal
+    if _scorer.rank_flash > 0 {
+        draw_set_color(c_white);
+        draw_set_alpha(_scorer.rank_flash);
+        draw_rectangle(0, 0, display_get_gui_width(), display_get_gui_height(), false);
+        draw_set_alpha(1);
+    }
 }
 
 // Phase messages
 if _scorer.show_timer < 60 {
-    // silence — let score roll
+    // silence
 }
 else if _scorer.show_timer < 150 {
     draw_set_color(c_white);
@@ -138,7 +115,6 @@ else if _scorer.show_timer < 300 {
 else {
     draw_set_color(c_white);
     draw_set_alpha(1);
-
     switch (_scorer.rank) {
         case "F-":
             draw_text_transformed(_cx, _cy + 140, "This is a historic failure. I am impressed.", 1, 1, 0);
@@ -178,5 +154,44 @@ else {
     }
 }
 
+// Earnings — pop in with scale
+if _scorer.rewards_applied {
+    var _pop = _scorer.earnings_pop;
+    draw_set_halign(fa_center);
+
+    draw_set_color(make_color_rgb(100, 255, 100));
+    draw_set_alpha(1);
+    draw_text_transformed(_cx - 180, _cy + 270, "+$" + string(_scorer.money_earned), 1.3 * _pop, 1.3 * _pop, 0);
+
+    draw_set_color(make_color_rgb(255, 220, 50));
+    draw_text_transformed(_cx + 180, _cy + 270, "+" + string(_scorer.scoops_earned) + " SCOOPS", 1.3 * _pop, 1.3 * _pop, 0);
+}
+
+// Tier-up banner — slams in at top
+if _scorer.tier_banner_timer > 0 {
+    var _bt = _scorer.tier_banner_timer;
+    var _slam = 1 + max(0, (_bt - 160) / 20) * 2;
+    var _banner_a = min(1, _bt / 30);
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+
+    draw_set_color(c_black);
+    draw_set_alpha(0.6 * _banner_a);
+    draw_rectangle(0, _cy - 300, display_get_gui_width(), _cy - 180, false);
+    draw_set_alpha(1);
+
+    draw_set_color(make_color_rgb(255, 220, 50));
+    draw_set_alpha(_banner_a);
+    draw_text_transformed(_cx, _cy - 270, "RANK UP!", 1.2 * _slam, 1.2 * _slam, 0);
+
+    draw_set_color(c_white);
+    draw_text_transformed(_cx, _cy - 220, _scorer.tier_banner_rank + " - " + _scorer.tier_banner_title, 1 * _slam, 1 * _slam, 0);
+
+    draw_set_alpha(1);
+}
+
+// Reset
 draw_set_alpha(1);
 draw_set_halign(fa_left);
+draw_set_valign(fa_top);

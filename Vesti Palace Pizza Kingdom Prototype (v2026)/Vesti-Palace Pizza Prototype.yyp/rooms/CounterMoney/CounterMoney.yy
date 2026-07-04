@@ -12,10 +12,12 @@
     {"name":"inst_201255AE","path":"rooms/CounterMoney/CounterMoney.yy",},
     {"name":"inst_7A25E4E9","path":"rooms/CounterMoney/CounterMoney.yy",},
     {"name":"inst_2F8F28FF","path":"rooms/CounterMoney/CounterMoney.yy",},
+    {"name":"inst_D6518F0","path":"rooms/CounterMoney/CounterMoney.yy",},
   ],
   "isDnd":false,
   "layers":[
     {"$GMRInstanceLayer":"","%Name":"Money","depth":0,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[
+        {"$GMRInstance":"v4","%Name":"inst_D6518F0","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_D6518F0","objectId":{"name":"oMoneyCounter","path":"objects/oMoneyCounter/oMoneyCounter.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":1216.0,"y":480.0,},
         {"$GMRInstance":"v4","%Name":"inst_791EF71E","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_791EF71E","objectId":{"name":"oPenny","path":"objects/oPenny/oPenny.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":0.3,"scaleY":0.3,"x":864.0,"y":480.0,},
         {"$GMRInstance":"v4","%Name":"inst_D51DAC2","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_D51DAC2","objectId":{"name":"oKey","path":"objects/oKey/oKey.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":0.3,"scaleY":0.3,"x":288.0,"y":480.0,},
         {"$GMRInstance":"v4","%Name":"inst_201255AE","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_201255AE","objectId":{"name":"oQuarter","path":"objects/oQuarter/oQuarter.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":0.3,"scaleY":0.3,"x":672.0,"y":448.0,},

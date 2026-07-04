@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"HudGetObjective",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"HudGetObjective",
+  "parent":{
+    "name":"Initialization",
+    "path":"folders/Initialization.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

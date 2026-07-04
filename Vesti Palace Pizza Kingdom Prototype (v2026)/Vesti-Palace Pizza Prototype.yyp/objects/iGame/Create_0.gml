@@ -43,3 +43,12 @@ global.pizza_sauce    = 0;
 global.pizza_cheese   = 0;
 global.pizza_cook     = 0;
 global.pizza_toppings = 0;
+
+//HUD
+global.money = 0;
+global.scoops = 0;              // cumulative reputation, 0-800
+global.last_slice_score = 0;
+global.last_rank = "-";
+global.pizzas_made = 0;
+global.player_name = "Myles";
+global.hud_visible = true;

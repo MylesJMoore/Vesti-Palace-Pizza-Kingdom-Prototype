@@ -6,3 +6,6 @@ max_speed     = 18;
 drag_friction_x = 0.80;
 drag_friction_y = 0.80;
 slide = 0.92; // slightly less coast than coins (key feels “heavier”)
+
+//Coin Value
+coin_value = 100;

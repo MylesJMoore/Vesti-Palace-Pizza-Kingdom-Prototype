@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"JukeboxScripts",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"JukeboxScripts",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Audio/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
