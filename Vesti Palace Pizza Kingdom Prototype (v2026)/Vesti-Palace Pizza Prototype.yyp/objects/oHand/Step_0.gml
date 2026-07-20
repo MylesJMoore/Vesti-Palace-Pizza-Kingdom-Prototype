@@ -1,16 +1,20 @@
 // --------------------------------------------------
-// Screen Shake 
+// Screen Shake  (compute offset; oCamera applies it in AssemblyLineV2)
 // --------------------------------------------------
-if shake_timer > 0 {
+// oHand — Screen Shake (compute only; oCamera applies it)
+if (shake_timer > 0) {
     shake_timer--;
     var _falloff = shake_timer / shake_duration;
-    var _ox = random_range(-shake_intensity, shake_intensity) * _falloff;
-    var _oy = random_range(-shake_intensity, shake_intensity) * _falloff;
-    var _cam = view_camera[0];
-    camera_set_view_pos(_cam,
-        camera_get_view_x(_cam) + _ox,
-        camera_get_view_y(_cam) + _oy
-    );
+    shake_ox = random_range(-shake_intensity, shake_intensity) * _falloff;
+    shake_oy = random_range(-shake_intensity, shake_intensity) * _falloff;
+
+    if (!instance_exists(oCamera)) {   // ONLY apply here when there's no camera controller
+        var _cam = view_camera[0];
+        camera_set_view_pos(_cam, camera_get_view_x(_cam) + shake_ox, camera_get_view_y(_cam) + shake_oy);
+    }
+} else {
+    shake_ox = 0;
+    shake_oy = 0;
 }
 
 // --------------------------------------------------

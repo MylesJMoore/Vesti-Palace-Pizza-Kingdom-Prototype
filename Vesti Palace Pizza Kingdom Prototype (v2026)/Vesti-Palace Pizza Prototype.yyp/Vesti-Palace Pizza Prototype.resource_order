@@ -79,6 +79,7 @@
     {"name":"obj_money_counter","order":5,"path":"objects/obj_money_counter/obj_money_counter.yy",},
     {"name":"obj_test_background","order":4,"path":"objects/obj_test_background/obj_test_background.yy",},
     {"name":"obj_warp","order":1,"path":"objects/obj_warp/obj_warp.yy",},
+    {"name":"oCamera","order":3,"path":"objects/oCamera/oCamera.yy",},
     {"name":"oCondimentTub","order":1,"path":"objects/oCondimentTub/oCondimentTub.yy",},
     {"name":"oCookButton","order":4,"path":"objects/oCookButton/oCookButton.yy",},
     {"name":"oCustomerDelivery","order":1,"path":"objects/oCustomerDelivery/oCustomerDelivery.yy",},

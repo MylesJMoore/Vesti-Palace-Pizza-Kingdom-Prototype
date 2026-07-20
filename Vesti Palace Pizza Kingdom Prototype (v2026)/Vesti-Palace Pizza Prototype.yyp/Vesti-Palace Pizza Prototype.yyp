@@ -114,6 +114,7 @@
     {"id":{"name":"obj_wall","path":"objects/obj_wall/obj_wall.yy",},},
     {"id":{"name":"obj_warp_block","path":"objects/obj_warp_block/obj_warp_block.yy",},},
     {"id":{"name":"obj_warp","path":"objects/obj_warp/obj_warp.yy",},},
+    {"id":{"name":"oCamera","path":"objects/oCamera/oCamera.yy",},},
     {"id":{"name":"oCondimentTub","path":"objects/oCondimentTub/oCondimentTub.yy",},},
     {"id":{"name":"oCookButton","path":"objects/oCookButton/oCookButton.yy",},},
     {"id":{"name":"oCursor","path":"objects/oCursor/oCursor.yy",},},

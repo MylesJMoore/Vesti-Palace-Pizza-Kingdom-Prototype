@@ -30,3 +30,5 @@ await_mouse_release = false;
 shake_intensity = 0;
 shake_duration  = 0;
 shake_timer     = 0;
+shake_ox = 0;
+shake_oy = 0;
