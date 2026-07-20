@@ -43,6 +43,13 @@ function Pizza_CalcSlice(sauce_globs, cheese_globs, cook_state, topping_count) {
     
     var _scoops_earned = floor(_score / 10);        // 0-10 per pizza
 	var _money_earned  = 5 + floor(_score * 0.5);   // base $5 + tip
+	
+	//Check if we use special sauce (automatically add 100 scoops)
+	if (global.special_sauce_used) {
+		_scoops_earned += 100;
+		_money_earned += 50;
+		global.special_sauce_used = false;
+	}
 
 	return { 
 	    slice_score: _score, 

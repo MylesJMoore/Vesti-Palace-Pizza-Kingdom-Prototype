@@ -155,7 +155,6 @@ if (mouse_check_button_released(mb_left)) {
 // --------------------------------------------------
 // Paint mode — stamp toppings onto pizza
 // --------------------------------------------------
-// Paint mode
 if (global.hand_mode == HAND_MODE.PAINT) {
     var pizza = instance_position(x, y, oPizzaV2);
     if (pizza != noone) {
@@ -180,7 +179,7 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 					        ingredient_type == target_ingredient) {
 					        current_count++;
 					    }
-}
+					}
             
 		            // Check limit
 		            var limit = 99;
@@ -189,16 +188,20 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 		                case INGREDIENT.MUSHROOM:  limit = pizza.max_mushroom;  break;
 		                case INGREDIENT.GLASS:     limit = pizza.max_glass;     break;
 		            }
+					
+					var _cost = scr_topping_cost(global.active_ingredient);
             
-					// Create Topping
-		            if (current_count < limit) {
+					// Create Topping — must be under the limit AND affordable
+		            if (current_count < limit && global.money >= _cost) {
+						// Spend Money on Topping
+						global.money -= _cost;   
+						
 						//Play SFX
 						switch (global.active_ingredient) {
 			                case INGREDIENT.PEPPERONI: sfx_play(snd_sfx_topping_pepperoni, true, 0.8); break;
 			                case INGREDIENT.MUSHROOM:  sfx_play(snd_sfx_topping_mushroom, true, 0.8);  break;
 			                case INGREDIENT.GLASS:     sfx_play(snd_sfx_topping_glass, true, 0.8);     break;
 			            }
-						
 						
 						//Create Topping
 					    var t = instance_create_layer(x, y, "Instances", oTopping);
@@ -249,6 +252,14 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 						        _s.max_life = 28;
 						    }
 						}
+						
+						// Spend feedback popup for topping money
+						if (_cost > 0) scr_money_popup(x, y - 16, -_cost);
+					}
+					// Under the limit but can't afford it
+					else if (current_count < limit) {
+						scr_money_popup(x, y - 16, 0);
+						// sfx_play(snd_sfx_deny, true, 0.8);   // optional buzz SFX
 					}
 		        }
 		    }
@@ -257,7 +268,8 @@ if (global.hand_mode == HAND_MODE.PAINT) {
         // Sauce and cheese — stamp while held
        if (mouse_check_button(mb_left)) {
 		    if (global.active_ingredient == INGREDIENT.SAUCE ||
-		        global.active_ingredient == INGREDIENT.CHEESE) {
+		        global.active_ingredient == INGREDIENT.CHEESE ||
+		        global.active_ingredient == INGREDIENT.SPECIALSAUCE) {
 
 		        pizza.glob_timer++;
 		        if (pizza.glob_timer >= pizza.glob_rate) {
@@ -270,6 +282,15 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 		                    PizzaScripts(pizza, x, y, global.active_ingredient);
 		                    var g = instance_create_layer(x, y, "Instances", oGlob);
 		                    g.sprite_index = spr_sauce_brush;
+		                }
+		            } else if (global.active_ingredient == INGREDIENT.SPECIALSAUCE) {
+		                // Only paint if not already full
+		                if (pizza.sauce_globs < pizza.sauce_target) {
+		                    pizza.sauce_globs++;
+		                    PizzaScripts(pizza, x, y, global.active_ingredient);
+		                    var g = instance_create_layer(x, y, "Instances", oGlob);
+		                    g.sprite_index = spr_specialsauce_brush;
+							global.special_sauce_used = true;
 		                }
 		            } else {
 		                if (pizza.cheese_globs < pizza.cheese_target) {
@@ -285,13 +306,13 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 		
 		// Manage looping paint sound
 		var _is_painting_now = mouse_check_button(mb_left) 
-		    && (global.active_ingredient == INGREDIENT.SAUCE || global.active_ingredient == INGREDIENT.CHEESE)
+		    && (global.active_ingredient == INGREDIENT.SAUCE || global.active_ingredient == INGREDIENT.CHEESE || global.active_ingredient == INGREDIENT.SPECIALSAUCE)
 		    && (pizza != noone);
 
 		if _is_painting_now {
 		    // Start loop if not already playing
 		    if paint_loop_snd == noone || !audio_is_playing(paint_loop_snd) {
-		        var _snd = (global.active_ingredient == INGREDIENT.SAUCE) ? snd_sfx_sauce : snd_sfx_cheese;
+		        var _snd = (global.active_ingredient == INGREDIENT.SAUCE || global.active_ingredient == INGREDIENT.SPECIALSAUCE) ? snd_sfx_sauce : snd_sfx_cheese;
 		        paint_loop_snd = audio_play_sound(_snd, 5, true); // looping
 		        audio_sound_gain(paint_loop_snd, 1, 0);
 		    }
@@ -304,10 +325,14 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 		}
 		
 		// Spawn splat particles for sauce/cheese
-		if global.active_ingredient == INGREDIENT.SAUCE || global.active_ingredient == INGREDIENT.CHEESE {
+		if (global.active_ingredient == INGREDIENT.SAUCE || global.active_ingredient == INGREDIENT.CHEESE || global.active_ingredient == INGREDIENT.SPECIALSAUCE) {
 		    var _splat_col = (global.active_ingredient == INGREDIENT.SAUCE) 
 		                     ? make_color_rgb(200, 50, 30) 
 		                     : make_color_rgb(240, 200, 50);
+							 
+			if (global.active_ingredient == INGREDIENT.SPECIALSAUCE) {
+				_splat_col = make_color_rgb(110, 220, 110);
+			}
 		    repeat(4) {
 		        var _s = instance_create_layer(x, y, "Instances", oGlobSplat);
 		        _s.col = _splat_col;
@@ -325,12 +350,16 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 // --------------------------------------------------
 if (mouse_check_button_pressed(mb_right)) {
     global.hand_mode = HAND_MODE.GRAB;
+	global.active_ingredient = INGREDIENT.NONE;
 
     var table = instance_find(oAssemblyTable, 0);
     if (instance_exists(table)) {
         table.active_ingredient = INGREDIENT.NONE;
         table.is_painting = false;
     }
+	
+	// Get New Idle HUD Message
+	oHUD.idle_prompt = scr_topping_prompt();
 }
 
 // --------------------------------------------------

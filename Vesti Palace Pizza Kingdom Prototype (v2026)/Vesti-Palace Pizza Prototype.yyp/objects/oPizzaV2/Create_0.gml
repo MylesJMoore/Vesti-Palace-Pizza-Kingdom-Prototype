@@ -22,13 +22,13 @@ sprite_index = spr_base_uncooked;
 // Coverage
 sauce_globs = 0;
 cheese_globs = 0;
-sauce_target = 300;
-cheese_target = 300;
+sauce_target = 400;
+cheese_target = 400;
 
 // Toppings Limit
-max_pepperoni = 8;
-max_mushroom  = 10;
-max_glass     = 8;
+max_pepperoni = 99;
+max_mushroom  = 99;
+max_glass     = 99;
 
 // Glob stamp timer
 glob_timer = 0;

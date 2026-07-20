@@ -10,7 +10,8 @@ enum INGREDIENT {
     CHEESE,
     PEPPERONI,
     MUSHROOM,
-    GLASS
+    GLASS,
+	SPECIALSAUCE
 }
 
 enum HAND_MODE {

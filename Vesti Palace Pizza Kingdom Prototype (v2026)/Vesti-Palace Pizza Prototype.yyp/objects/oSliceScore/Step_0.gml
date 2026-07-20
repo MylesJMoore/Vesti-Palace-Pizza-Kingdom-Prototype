@@ -75,7 +75,7 @@ if show_continue && !rewards_applied {
         // Scoops (capped at 800)
         var _before = global.scoops;
         global.scoops = min(global.scoops + scoops_earned, 800);
-
+		
         // Tier tick-over check
         var _tier_before = floor(_before / 100);
         var _tier_after  = floor(global.scoops / 100);

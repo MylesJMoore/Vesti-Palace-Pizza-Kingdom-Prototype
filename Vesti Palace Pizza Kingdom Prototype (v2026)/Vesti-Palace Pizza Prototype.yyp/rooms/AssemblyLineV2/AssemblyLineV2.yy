@@ -16,6 +16,7 @@
     {"name":"inst_3D722CCC","path":"rooms/AssemblyLineV2/AssemblyLineV2.yy",},
     {"name":"inst_2C6926A3","path":"rooms/AssemblyLineV2/AssemblyLineV2.yy",},
     {"name":"inst_3C88597F","path":"rooms/AssemblyLineV2/AssemblyLineV2.yy",},
+    {"name":"inst_7EE39270","path":"rooms/AssemblyLineV2/AssemblyLineV2.yy",},
   ],
   "isDnd":false,
   "layers":[
@@ -25,6 +26,7 @@
         {"$GMRInstance":"v4","%Name":"inst_3F65AA6C","colour":4294967295,"frozen":false,"hasCreationCode":true,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_3F65AA6C","objectId":{"name":"oBin","path":"objects/oBin/oBin.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":0.616,"scaleY":0.68,"x":864.0,"y":352.0,},
         {"$GMRInstance":"v4","%Name":"inst_5E560CFB","colour":4294967295,"frozen":false,"hasCreationCode":true,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_5E560CFB","objectId":{"name":"oBin","path":"objects/oBin/oBin.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":0.616,"scaleY":0.68,"x":1376.0,"y":352.0,},
         {"$GMRInstance":"v4","%Name":"inst_67345ABC","colour":4294967295,"frozen":false,"hasCreationCode":true,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_67345ABC","objectId":{"name":"oBin","path":"objects/oBin/oBin.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":0.616,"scaleY":0.68,"x":1120.0,"y":352.0,},
+        {"$GMRInstance":"v4","%Name":"inst_7EE39270","colour":4294967295,"frozen":false,"hasCreationCode":true,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_7EE39270","objectId":{"name":"oBin","path":"objects/oBin/oBin.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":0.616,"scaleY":0.67999995,"x":928.0,"y":192.0,},
       ],"layers":[],"name":"PizzaObjects","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRInstanceLayer":"","%Name":"Environment","depth":100,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[
         {"$GMRInstance":"v4","%Name":"inst_62A6F8CC_1","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_62A6F8CC_1","objectId":{"name":"oHand","path":"objects/oHand/oHand.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":736.0,"y":512.0,},

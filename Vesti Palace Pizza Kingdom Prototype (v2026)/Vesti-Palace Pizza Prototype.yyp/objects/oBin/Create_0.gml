@@ -26,3 +26,6 @@ on_clicked = function() {
 pulse_timer = 0;
 base_xscale = image_xscale;
 base_yscale = image_yscale;
+
+// Special Sauce
+global.special_sauce_used = false;

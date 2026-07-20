@@ -11,16 +11,7 @@ if shake_timer > 0 {
 var spr = spr_cursor_default;
 
 if (global.hand_mode == HAND_MODE.PAINT) {
-    switch (global.active_ingredient) {
-		//Sauces
-        case INGREDIENT.SAUCE:  spr = spr_sauce_brush;  break;
-        case INGREDIENT.CHEESE: spr = spr_cheese_brush; break;
-		//Toppings
-        case INGREDIENT.PEPPERONI: spr = spr_pepperoni_brush; break;
-		case INGREDIENT.MUSHROOM:  spr = spr_mushroom_brush;  break;
-		case INGREDIENT.GLASS:  spr = spr_glass_brush;  break;
-        default: spr = spr_cursor_default; break;
-    }
+	spr = scr_topping_icon(global.active_ingredient);
 } else {
     switch (cursor_state) {
         case 1: spr = spr_cursor_hover;  break;
@@ -30,3 +21,26 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 }
 
 draw_sprite(spr, 0, x, y);
+
+//Toppings Text
+var _bin = instance_position(mouse_x, mouse_y, oBin);
+if (_bin != noone) {
+    // Show label if this bin is the selected one, OR nothing is selected yet
+    if (_bin.is_selected || global.active_ingredient == INGREDIENT.NONE) {
+        var _name = scr_topping_name(_bin.ingredient_type); // the BIN's ingredient, not the global
+        var _ty = y - (sprite_exists(sprite_index) ? sprite_height * 0.5 : 0) - 8;
+        draw_set_font(fnt_dialogue);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_bottom);
+        // shadow
+        draw_set_color(c_black);
+        draw_text(x + 1, _ty + 1, _name);
+        // fill — per-topping color, matches the HUD
+        draw_set_color(scr_topping_color(_bin.ingredient_type));
+        draw_text(x, _ty, _name);
+        // reset
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+        draw_set_color(c_white);
+    }
+}

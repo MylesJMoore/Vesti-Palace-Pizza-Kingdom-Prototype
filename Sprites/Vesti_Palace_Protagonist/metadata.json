@@ -1,0 +1,32 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "a41f5ce4-8a7f-4727-9af2-9424c127ec7e",
+        "name": "Vesti Palace Protagonist",
+        "prompt": "wacky rubbery monster protagonist, Amazing Digital Circus energy, Grinch-inspired long droopy nose and thick unibrow, olive green skin #7C8B3F with darker olive shading #4E5A25, big expressive cartoon eyes with yellow-gold #F2C14E pop color, wide mischievous grin, pizza shop uniform shirt with vertical red #C93B3B and white #F2EDE4 stripes, plain black #211F1C pants, no hat, exaggerated cartoon proportions",
+        "size": {
+          "width": 68,
+          "height": 68
+        },
+        "template_id": "mannequin",
+        "directions": 4,
+        "view": "low top-down",
+        "created_at": "2026-07-20T04:50:09.013871+00:00"
+      },
+      "folder": "Vesti_Palace_Protagonist",
+      "frames": {
+        "rotations": {
+          "south": "Vesti_Palace_Protagonist/rotations/south.png",
+          "west": "Vesti_Palace_Protagonist/rotations/west.png",
+          "east": "Vesti_Palace_Protagonist/rotations/east.png",
+          "north": "Vesti_Palace_Protagonist/rotations/north.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-07-20T04:57:45.904463"
+}

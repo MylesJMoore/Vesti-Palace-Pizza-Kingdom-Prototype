@@ -3,6 +3,8 @@ function PizzaScripts(pizza, world_x, world_y, ingredient) {
     
     if (ingredient == INGREDIENT.SAUCE) {
         surf = pizza.surf_sauce;
+    } else if (ingredient == INGREDIENT.SPECIALSAUCE) {
+        surf = pizza.surf_sauce;
     } else if (ingredient == INGREDIENT.CHEESE) {
         surf = pizza.surf_cheese;
     }
@@ -26,6 +28,10 @@ function PizzaScripts(pizza, world_x, world_y, ingredient) {
 	surface_set_target(surf);
 	if (ingredient == INGREDIENT.SAUCE) {
 	    draw_sprite_ext(spr_sauce_brush, 0,
+	        surf_x, surf_y,
+	        5, 5, rand_angle, c_white, 0.9);
+	} else if (ingredient == INGREDIENT.SPECIALSAUCE) {
+	    draw_sprite_ext(spr_specialsauce_brush, 0,
 	        surf_x, surf_y,
 	        5, 5, rand_angle, c_white, 0.9);
 	} else {

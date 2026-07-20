@@ -7,6 +7,9 @@ instance_persistent = true;
 // Rooms where HUD should NOT show
 hidden_rooms = [MainMenu, Computer]; // swap to your actual room names
 
+// Assembly Line Idle Prompts
+idle_prompt = scr_topping_prompt();
+
 // SCOOPS tier data
 scoops_titles = [
     "The Stinkiest Pizza Shop",

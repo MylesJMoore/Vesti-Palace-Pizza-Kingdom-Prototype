@@ -1,0 +1,67 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "de36e8df-0ad0-4cf4-8bb0-690e29bec4d2",
+        "name": "Vesti Palace Protagonist v2",
+        "prompt": "wacky rubbery monster protagonist, Amazing Digital Circus energy, Grinch-inspired long droopy nose, olive green skin #7C8B3F with darker olive shading #4E5A25, thin arched eyebrows raised in a friendly mischievous expression (not a heavy furrowed unibrow), big round cartoon eyes with yellow-gold #F2C14E pop color, warm playful grin, pizza shop uniform shirt with vertical red #C93B3B and white #F2EDE4 stripes, plain black #211F1C pants, no hat, exaggerated cartoon proportions",
+        "size": {
+          "width": 68,
+          "height": 68
+        },
+        "template_id": "mannequin",
+        "directions": 4,
+        "view": "low top-down",
+        "created_at": "2026-07-20T05:06:12.351059+00:00"
+      },
+      "folder": "Vesti_Palace_Protagonist_v2",
+      "frames": {
+        "rotations": {
+          "south": "Vesti_Palace_Protagonist_v2/rotations/south.png",
+          "west": "Vesti_Palace_Protagonist_v2/rotations/west.png",
+          "east": "Vesti_Palace_Protagonist_v2/rotations/east.png",
+          "north": "Vesti_Palace_Protagonist_v2/rotations/north.png"
+        },
+        "animations": {
+          "bouncy_energetic_pizza-shop_walk_exaggerated_carto": {
+            "east": [
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/east/frame_000.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/east/frame_001.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/east/frame_002.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/east/frame_003.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/east/frame_004.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/east/frame_005.png"
+            ],
+            "west": [
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/west/frame_000.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/west/frame_001.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/west/frame_002.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/west/frame_003.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/west/frame_004.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/west/frame_005.png"
+            ],
+            "south": [
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/south/frame_000.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/south/frame_001.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/south/frame_002.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/south/frame_003.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/south/frame_004.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/south/frame_005.png"
+            ],
+            "north": [
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/north/frame_000.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/north/frame_001.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/north/frame_002.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/north/frame_003.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/north/frame_004.png",
+              "Vesti_Palace_Protagonist_v2/animations/bouncy_energetic_pizza-shop_walk_exaggerated_carto/north/frame_005.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-07-20T05:16:44.333888"
+}

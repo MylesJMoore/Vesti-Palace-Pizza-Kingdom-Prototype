@@ -29,6 +29,9 @@ if has_pizza {
                 global.topping_depth     = 0;
                 global.hand_mode         = HAND_MODE.GRAB;
                 global.active_ingredient = INGREDIENT.NONE;
+				
+				//Reset HUD Idle Prompts in Assembly Line
+				oHUD.idle_prompt = scr_topping_prompt();
                 
                 global.current_customer++;
                 if global.current_customer >= array_length(global.customer_queue) {
