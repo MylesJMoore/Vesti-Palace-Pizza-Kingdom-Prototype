@@ -26,3 +26,14 @@ hint_pulse = 0;
 sparkle_timer = 0;
 glow_intensity = 30;
 glow_distance_radius = 20;
+
+//When Clicked deselect
+is_selected = false;
+on_clicked = function() {
+    if (is_selected) {
+        // deselect
+        is_selected = false;
+        global.hand_mode = HAND_MODE.GRAB;
+        global.active_ingredient = INGREDIENT.NONE;
+    }
+};

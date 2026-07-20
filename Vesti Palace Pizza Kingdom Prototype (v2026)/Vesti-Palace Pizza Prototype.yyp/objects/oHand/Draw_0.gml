@@ -12,8 +12,13 @@ var spr = spr_cursor_default;
 
 if (global.hand_mode == HAND_MODE.PAINT) {
     switch (global.active_ingredient) {
+		//Sauces
         case INGREDIENT.SAUCE:  spr = spr_sauce_brush;  break;
         case INGREDIENT.CHEESE: spr = spr_cheese_brush; break;
+		//Toppings
+        case INGREDIENT.PEPPERONI: spr = spr_pepperoni_brush; break;
+		case INGREDIENT.MUSHROOM:  spr = spr_mushroom_brush;  break;
+		case INGREDIENT.GLASS:  spr = spr_glass_brush;  break;
         default: spr = spr_cursor_default; break;
     }
 } else {

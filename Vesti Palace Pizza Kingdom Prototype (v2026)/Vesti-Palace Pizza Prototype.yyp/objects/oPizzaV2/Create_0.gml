@@ -1,10 +1,10 @@
 event_inherited();
 // Physics
 drag_strength = 0.16;
-max_speed     = 18;
-drag_friction_x = 0.80;
-drag_friction_y = 0.80;
-slide = 0.92;
+max_speed     = 12;
+drag_friction_x = 0.50;
+drag_friction_y = 0.50;
+slide = 0.72;
 
 // Settings
 drag_bounds_mode = 0;
@@ -37,12 +37,12 @@ glob_rate = 2;
 //Surface
 //Surf Size is the internal resolution of the paint surface
 //Pizza radius is for the painting area radius in the shape of a circle
-surface_offset_x = 10;
+surface_offset_x = 0;
 surface_offset_y = 10;
 surf_sauce  = -1;
 surf_cheese = -1;
 surf_size = 1500;
-pizza_radius_surf = 480;
+pizza_radius_surf = 435;
 
 //Squish
 squish_timer = 0;

@@ -1,6 +1,6 @@
 {
   "$GMSprite":"v2",
-  "%Name":"spr_cheese_brush",
+  "%Name":"spr_mushroom_brush",
   "bboxMode":0,
   "bbox_bottom":37,
   "bbox_left":0,
@@ -12,28 +12,28 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"74116fac-4ed4-442f-9ed9-bb5752c0315a","name":"74116fac-4ed4-442f-9ed9-bb5752c0315a","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"a2d5e897-f58b-4f60-9d43-b00b3d0c74da","name":"a2d5e897-f58b-4f60-9d43-b00b3d0c74da","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":38,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"54e5f9b9-e218-4a65-a450-c7b8ea72b295","blendMode":0,"displayName":"default","isLocked":false,"name":"54e5f9b9-e218-4a65-a450-c7b8ea72b295","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"79c35130-1603-4c6f-946f-fe740fdeeb01","blendMode":0,"displayName":"default","isLocked":false,"name":"79c35130-1603-4c6f-946f-fe740fdeeb01","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
-  "name":"spr_cheese_brush",
+  "name":"spr_mushroom_brush",
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"Cheese",
-    "path":"folders/Assembly Line V2/Sprites/Pizza Toppings/Cheese.yy",
+    "name":"Mushrooms",
+    "path":"folders/Assembly Line V2/Sprites/Pizza Toppings/Mushrooms.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
   "resourceVersion":"2.0",
   "sequence":{
     "$GMSequence":"v1",
-    "%Name":"spr_cheese_brush",
+    "%Name":"spr_mushroom_brush",
     "autoRecord":true,
     "backdropHeight":768,
     "backdropImageOpacity":0.5,
@@ -57,7 +57,7 @@
       "resourceType":"KeyframeStore<MomentsEventKeyframe>",
       "resourceVersion":"2.0",
     },
-    "name":"spr_cheese_brush",
+    "name":"spr_mushroom_brush",
     "playback":1,
     "playbackSpeed":30.0,
     "playbackSpeedType":0,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"74116fac-4ed4-442f-9ed9-bb5752c0315a","path":"sprites/spr_cheese_brush/spr_cheese_brush.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"ce076351-139a-4510-a4dc-d8ad952d758f","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"a2d5e897-f58b-4f60-9d43-b00b3d0c74da","path":"sprites/spr_mushroom_brush/spr_mushroom_brush.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"5a260048-6be3-406f-9a62-91377f62ffe3","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -79,7 +79,7 @@
     "yorigin":19,
   },
   "swatchColours":null,
-  "swfPrecision":0.5,
+  "swfPrecision":2.525,
   "textureGroupId":{
     "name":"Default",
     "path":"texturegroups/Default",

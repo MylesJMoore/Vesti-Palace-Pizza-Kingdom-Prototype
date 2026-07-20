@@ -120,7 +120,6 @@ if (held_item != noone) {
 
         held_item.vx += (tx - held_item.x) * held_item.drag_strength;
         held_item.vy += (ty - held_item.y) * held_item.drag_strength;
-
         held_item.vx = clamp(held_item.vx, -held_item.max_speed, held_item.max_speed);
         held_item.vy = clamp(held_item.vy, -held_item.max_speed, held_item.max_speed);
     }
@@ -134,7 +133,7 @@ if (mouse_check_button_released(mb_left)) {
         if (instance_exists(held_item)) {
             var dropped = held_item;
 
-            // restore original scale
+            // Pizza - restore original scale
             if (variable_instance_exists(dropped, "base_xscale")) {
                 dropped.image_xscale = dropped.base_xscale;
                 dropped.image_yscale = dropped.base_yscale;
