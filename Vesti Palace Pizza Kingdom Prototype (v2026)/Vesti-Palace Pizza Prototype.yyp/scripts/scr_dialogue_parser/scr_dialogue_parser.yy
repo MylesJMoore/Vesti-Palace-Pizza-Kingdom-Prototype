@@ -6,7 +6,7 @@
   "name":"scr_dialogue_parser",
   "parent":{
     "name":"Scripts",
-    "path":"folders/Dialogue System/Scripts.yy",
+    "path":"folders/Customer System/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

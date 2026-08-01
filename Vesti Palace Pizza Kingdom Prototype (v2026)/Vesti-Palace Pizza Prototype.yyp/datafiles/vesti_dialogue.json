@@ -1,53 +1,164 @@
 {
   "nodes": [
-	{
-	  "id": "counter_customer_greet",
-	  "renderer": "box",
-	  "box_layout": "name_only",
-	  "box_style": "undertale",
-	  "lines": [
-		{ "speaker": "guramahsh","title": "Guramahsh", "text": "Tell me, child. What pizza do you envision Guramahsh requiring?" },
-		{
-		  "type": "choice",
-		  "style": "vertical",
-		  "box_style": "undertale",
-		  "title": "Guramahsh",
-		  "options": [
-			{ "text": "Horse Blood, Extra Pepperoni. Thin Crust.", "goto": "counter_customer_good" },
-			{ "text": "BLT (Bacon, Lettuce, Tangerine) Deep Pan Crust", "goto": "counter_customer_bad" }
-		  ]
-		}
-	  ]
-	},
-	{
-	  "id": "counter_customer_good",
-	  "renderer": "box",
-	  "title": "Guramahsh",
-	  "box_layout": "name_only",
-	  "box_style": "undertale",
-	  "lines": [
-		{ "speaker": "guramahsh", "text": "Great." }
-	  ]
-	},
-	{
-	  "id": "counter_customer_bad",
-	  "renderer": "box",
-	  "title": "Guramahsh",
-	  "box_layout": "name_only",
-	  "box_style": "undertale",
-	  "lines": [
-		{ "speaker": "guramahsh", "text": "Yuck, that's really fucking gross. Great!" }
-	  ]
-	},
-	{
-	  "id": "counter_customer_greet_return",
-	  "renderer": "box",
-	  "title": "Guramahsh",
-	  "box_layout": "name_only",
-	  "box_style": "undertale",
-	  "lines": [
-		{ "speaker": "guramahsh", "text": "I, Guramahsh, await my pizza." }
-	  ]
-	}
+    {
+      "id": "greet_guramahsh",
+      "renderer": "box",
+      "box_layout": "name_only",
+      "box_style": "undertale",
+      "lines": [
+        { "speaker": "guramahsh", "title": "Guramahsh", "text": "Tell me, child. What pizza do you envision Guramahsh requiring?" },
+        {
+          "type": "choice",
+          "style": "vertical",
+          "box_style": "undertale",
+          "title": "Guramahsh",
+          "options": [
+            { "text": "Horse Blood, Extra Pepperoni. Thin Crust.", "goto": "guramahsh_good" },
+            { "text": "BLT (Bacon, Lettuce, Tangerine) Deep Pan Crust", "goto": "guramahsh_bad" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "guramahsh_good",
+      "renderer": "box",
+      "title": "Guramahsh",
+      "box_layout": "name_only",
+      "box_style": "undertale",
+      "lines": [
+        { "speaker": "guramahsh", "text": "Great." }
+      ]
+    },
+    {
+      "id": "guramahsh_bad",
+      "renderer": "box",
+      "title": "Guramahsh",
+      "box_layout": "name_only",
+      "box_style": "undertale",
+      "lines": [
+        { "speaker": "guramahsh", "text": "Yuck, that's really fucking gross. Great!" }
+      ]
+    },
+    {
+      "id": "greet_scary",
+      "renderer": "box",
+      "title": "Nice Scary Guy",
+      "box_layout": "name_only",
+      "box_style": "undertale",
+      "lines": [
+        { "speaker": "scary", "title": "Nice Scary Guy", "text": "GRAAAAH-! ...Oh gosh. Sorry. Didn't mean to startle you there." },
+        { "speaker": "scary", "title": "Nice Scary Guy", "text": "I'd just love a pizza, if it's really no trouble at all." },
+        { "speaker": "scary", "title": "Nice Scary Guy", "text": "You're doing wonderfully, by the way." }
+      ]
+    },
+    {
+      "id": "greet_poet",
+      "renderer": "box",
+      "title": "Tortured Hungry Poet",
+      "box_layout": "name_only",
+      "box_style": "undertale",
+      "lines": [
+        { "speaker": "poet", "title": "Tortured Hungry Poet", "text": "Hunger gnaws at me like an unfinished sonnet." },
+        { "speaker": "poet", "title": "Tortured Hungry Poet", "text": "Endless. Aching. Unresolved." },
+        { "speaker": "poet", "title": "Tortured Hungry Poet", "text": "Bring me a pie as tragic and beautiful as my unpublished works..." },
+        { "speaker": "poet", "title": "Tortured Hungry Poet", "text": "...And swiftly. I am wasting away." }
+      ]
+    },
+    {
+      "id": "greet_frank",
+      "renderer": "box",
+      "title": "Frank",
+      "box_layout": "name_only",
+      "box_style": "undertale",
+      "lines": [
+        { "speaker": "frank", "title": "Frank", "text": "Yo. I'd like a pizza." },
+        { "speaker": "frank", "title": "Frank", "text": "That's the whole thing. That's it. Appreciate you." }
+      ]
+    },
+    {
+      "id": "greet_dryellow",
+      "renderer": "box",
+      "title": "Dr. Yellow Guy",
+      "box_layout": "name_only",
+      "box_style": "undertale",
+      "lines": [
+        { "speaker": "dryellow", "title": "Dr. Yellow Guy", "text": "Ah, a fresh specimen! Er- customer. Customer. Forgive the slip." },
+        { "speaker": "dryellow", "title": "Dr. Yellow Guy", "text": "My professional diagnosis is...you will prepare me a pizza." },
+        { "speaker": "dryellow", "title": "Dr. Yellow Guy", "text": "It is, medically, necessary." }
+      ]
+    },
+    {
+      "id": "greet_cloud",
+      "renderer": "box",
+      "title": "Mrs. Cloud",
+      "box_layout": "name_only",
+      "box_style": "undertale",
+      "lines": [
+        { "speaker": "cloud", "title": "Mrs. Cloud", "text": "Ohhh, hello there, dear... *drifts gently past the counter*" },
+        { "speaker": "cloud", "title": "Mrs. Cloud", "text": "A warm little pizza would be just lovely on a day like this." },
+        { "speaker": "cloud", "title": "Mrs. Cloud", "text": "Take your time, sweetpea." }
+      ]
+    },
+
+    {
+      "id": "wait_guramahsh",
+      "renderer": "box",
+      "title": "Guramahsh",
+      "box_layout": "name_only",
+      "box_style": "undertale",
+      "lines": [
+        { "speaker": "guramahsh", "title": "Guramahsh", "text": "Guramahsh's patience is eternal. His hunger is not. The pizza, child." }
+      ]
+    },
+    {
+      "id": "wait_scary",
+      "renderer": "box",
+      "title": "Nice Scary Guy",
+      "box_layout": "name_only",
+      "box_style": "undertale",
+      "lines": [
+        { "speaker": "scary", "title": "Nice Scary Guy", "text": "Oh, no rush at all! I'll just wait here. ...Smiling. Sorry, it's just my face." }
+      ]
+    },
+    {
+      "id": "wait_poet",
+      "renderer": "box",
+      "title": "Tortured Hungry Poet",
+      "box_layout": "name_only",
+      "box_style": "undertale",
+      "lines": [
+        { "speaker": "poet", "title": "Tortured Hungry Poet", "text": "Still I wait... marinating in exquisite agony. As all great artists must." }
+      ]
+    },
+    {
+      "id": "wait_frank",
+      "renderer": "box",
+      "title": "Frank",
+      "box_layout": "name_only",
+      "box_style": "undertale",
+      "lines": [
+        { "speaker": "frank", "title": "Frank", "text": "Still here. Still Frank. Still waiting on that pizza." }
+      ]
+    },
+    {
+      "id": "wait_dryellow",
+      "renderer": "box",
+      "title": "Dr. Yellow Guy",
+      "box_layout": "name_only",
+      "box_style": "undertale",
+      "lines": [
+        { "speaker": "dryellow", "title": "Dr. Yellow Guy", "text": "The prognosis remains unchanged. I still require my pizza. Stat." }
+      ]
+    },
+    {
+      "id": "wait_cloud",
+      "renderer": "box",
+      "title": "Mrs. Cloud",
+      "box_layout": "name_only",
+      "box_style": "undertale",
+      "lines": [
+        { "speaker": "cloud", "title": "Mrs. Cloud", "text": "No hurry at all, dear... I'll just drift here a while... *hums softly*" }
+      ]
+    }
   ]
 }

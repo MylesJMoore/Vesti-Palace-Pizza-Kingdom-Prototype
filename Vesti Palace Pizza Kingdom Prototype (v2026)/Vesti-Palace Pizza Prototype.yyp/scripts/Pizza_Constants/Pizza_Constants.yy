@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"Pizza_Constants",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Assembly Line/Scripts.yy",
+    "name":"Game Settings",
+    "path":"folders/Game Settings.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -91,8 +91,9 @@ function dialogue_show_line() {
             _inst = instance_create_layer(0, 0, "Instances", obj_dialogue_box);
             _inst.box_layout = _mgr.current_box_layout;
 			if _mgr.current_box_style == "undertale" {
-		        dialogue_box_set_undertale_style(_inst, true);
-		    }
+			    var _spk = variable_struct_exists(_line, "speaker") ? _line.speaker : "";
+			    dialogue_box_set_undertale_style(_inst, false, _spk);
+			}
         } else {
             _inst = instance_create_layer(obj_player.x, obj_player.y - 550, "Instances", obj_dialogue_bubble);
         }
@@ -146,7 +147,8 @@ function dialogue_show_line() {
         _inst.advance_key   = _mgr.interact_key;
 		
 		if _mgr.current_box_style == "undertale" {
-		    dialogue_box_set_undertale_style(_inst);
+		    var _spk = variable_struct_exists(_line, "speaker") ? _line.speaker : "";
+		    dialogue_box_set_undertale_style(_inst, true, _spk);
 		}
 
         // Portrait — read from line if present
@@ -249,24 +251,68 @@ function dialogue_count_lines(text, chars_per_line) {
 }
 
 function dialogue_get_speaker_name(speaker_id) {
-    // Map speaker IDs to display names
-    // Add entries here for each character in your game
+	show_debug_message(speaker_id);
     switch (speaker_id) {
-        case "mae":    return "Mae";
-        case "bruce": return "Bruce";
-        case "npc_02": return "Gregg";
-        case "npc_03": return "Angus";
-        case "npc_04": return "Mae";
-		case "guramahsh": return "Guramahsh";
-        default:       return speaker_id; // fallback to raw id
+        case "mae":       return "Mae";
+        case "bruce":     return "Bruce";
+        case "npc_02":    return "Gregg";
+        case "npc_03":    return "Angus";
+        case "npc_04":    return "Mae";
+        case "guramahsh": return "Guramahsh";
+        case "scary":     return "Nice Scary Guy";
+        case "poet":      return "Tortured Hungry Poet";
+        case "frank":     return "Frank";
+        case "dryellow":  return "Dr. Yellow Guy";
+        case "cloud":     return "Mrs. Cloud";
+        default:          return speaker_id;
     }
 }
 
-function dialogue_box_set_undertale_style(box_inst, is_choice_box = false) {
+/// @function scr_customer_wait_node(id)
+/// @description Node this customer uses once they've already given their order.
+function scr_customer_wait_node(_id) {
+    switch (_id) {
+        case CUSTOMER.GURAMAHSH: return "wait_guramahsh";
+        case CUSTOMER.SCARY_GUY: return "wait_scary";
+        case CUSTOMER.POET:      return "wait_poet";
+        case CUSTOMER.FRANK:     return "wait_frank";
+        case CUSTOMER.DR_YELLOW: return "wait_dryellow";
+        case CUSTOMER.MRS_CLOUD: return "wait_cloud";
+        default:                 return "wait_guramahsh";
+    }
+}
+
+/// @function dialogue_speaker_name_color(speaker_id)
+function dialogue_speaker_name_color(_speaker_id) {
+    switch (_speaker_id) {
+        case "guramahsh": return c_purple // regal purple
+        case "scary":     return c_maroon // friendly green
+        case "poet":      return c_teal // melancholy blue
+        case "frank":     return c_white// plain off-white
+        case "dryellow":  return c_yellow  // yellow, obviously
+        case "cloud":     return c_aqua // soft sky
+        default:          return c_white;                      // your current default
+    }
+}
+
+/// @function dialogue_speaker_text_color(speaker_id)
+function dialogue_speaker_text_color(_speaker_id) {
+    switch (_speaker_id) {
+        case "guramahsh": return c_white//return make_color_rgb(200, 160, 255);
+        case "scary":     return c_white//return make_color_rgb(180, 255, 180);
+        case "poet":      return c_white//return make_color_rgb(190, 205, 255);
+        case "frank":     return c_white//return make_color_rgb(230, 230, 220);
+        case "dryellow":  return c_white//return make_color_rgb(255, 240, 150);
+        case "cloud":     return c_white//return make_color_rgb(225, 240, 255);
+        default:          return c_white//return make_color_rgb(180, 255, 100); // your current lime green
+    }
+}
+
+function dialogue_box_set_undertale_style(box_inst, is_choice_box = false, speaker_id = "") {
     box_inst.box_style    = "undertale";
     box_inst.box_layout   = obj_dialogue_manager.current_box_layout; // reads from JSON
-    box_inst.name_text_color = c_yellow;  // Speaker Name
-	box_inst.text_color      = make_color_rgb(180, 255, 100); // Body Text - Lime Green
+    box_inst.name_text_color = dialogue_speaker_name_color(speaker_id);
+    box_inst.text_color      = dialogue_speaker_text_color(speaker_id);
     box_inst.name_bg_color   = c_black;
     box_inst.box_position = obj_dialogue_manager.current_box_position;
     box_inst.box_h        = 200;
@@ -278,7 +324,9 @@ function dialogue_box_set_undertale_style(box_inst, is_choice_box = false) {
     box_inst.advance_key  = ord("Z");
 	
 	//Check if this is a choice box and override speaker name color
+	/*
 	if (is_choice_box) {
 		box_inst.text_color = c_yellow;
 	}
+	*/
 }

@@ -31,8 +31,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_guramahsh",
-    "path":"sprites/spr_guramahsh/spr_guramahsh.yy",
+    "name":"spr_dr_yellow_guy",
+    "path":"sprites/spr_dr_yellow_guy/spr_dr_yellow_guy.yy",
   },
   "spriteMaskId":null,
   "visible":true,

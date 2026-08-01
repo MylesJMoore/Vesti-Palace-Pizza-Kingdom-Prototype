@@ -25,6 +25,9 @@ cheese_globs = 0;
 sauce_target = 400;
 cheese_target = 400;
 
+//Toppings Count
+topping_counts = array_create(INGREDIENT.COUNT, 0);
+
 // Toppings Limit
 max_pepperoni = 99;
 max_mushroom  = 99;

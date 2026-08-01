@@ -10,7 +10,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"Objects",
-    "path":"folders/Dialogue System/Objects.yy",
+    "path":"folders/Customer System/Objects.yy",
   },
   "parentObjectId":null,
   "persistent":false,

@@ -52,3 +52,11 @@ global.last_rank = "-";
 global.pizzas_made = 0;
 global.player_name = "Myles";
 global.hud_visible = true;
+
+//Customer
+global.current_customer = CUSTOMER.GURAMAHSH;
+global.current_customer_sprite = CUSTOMER_SPRITES.spr_guramahsh;
+global.current_order    = array_create(INGREDIENT.COUNT, 0);
+global.order_revealed = false;
+global.order_served     = false;
+scr_customer_new();   // roll the first real customer + order

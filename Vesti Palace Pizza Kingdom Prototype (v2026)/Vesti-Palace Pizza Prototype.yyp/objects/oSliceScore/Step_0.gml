@@ -39,6 +39,11 @@ if show_timer >= 300 && !show_continue {
     }
 }
 
+// Once the big number has finished rolling, slide the satisfaction line in
+if (show_continue) {                       // was: display_score >= slice_score - 0.5
+    sat_reveal = min(sat_reveal + 0.06, 1);
+}
+
 // Fade rank flash
 if rank_flash > 0 {
     rank_flash -= 0.05;

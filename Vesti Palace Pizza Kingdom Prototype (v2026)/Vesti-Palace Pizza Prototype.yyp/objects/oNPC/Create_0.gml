@@ -1,4 +1,4 @@
-sprite_index = spr_guramahsh;
+//sprite_index = global.current_customer_sprite;
 
 // Dialogue config — override npc_id and dialogue_node in room Creation Code
 npc_id = "npc_01";
@@ -9,6 +9,7 @@ triggered_auto = false;
 dialogue_was_active = false;
 prompt_inst = instance_create_layer(x, y, "Instances", obj_dialogue_prompt);
 prompt_inst.follow_inst = id;
+was_in_range = false;
 
 // Dialogue Renderer Config
 default_renderer   = "bubble"; // override to "box" per NPC in Creation Code

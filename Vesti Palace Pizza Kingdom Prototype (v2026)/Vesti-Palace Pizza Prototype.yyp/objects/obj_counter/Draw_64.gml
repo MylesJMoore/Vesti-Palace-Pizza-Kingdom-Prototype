@@ -191,6 +191,66 @@ if _scorer.tier_banner_timer > 0 {
     draw_set_alpha(1);
 }
 
+// --- Order satisfaction line (below earnings) ---
+/*
+if (_scorer.satisfaction >= 0 && _scorer.sat_reveal > 0) {
+    var _sy    = _cy + 330;
+    var _slide = (1 - _scorer.sat_reveal) * 30;
+
+    var _scol;
+    if      (_scorer.satisfaction >= 100) _scol = make_color_rgb(90, 255, 120);
+    else if (_scorer.satisfaction >= 60)  _scol = make_color_rgb(255, 210, 90);
+    else                                  _scol = make_color_rgb(255, 90, 90);
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_alpha(_scorer.sat_reveal);
+    draw_set_color(_scol);
+	var _customer_name = scr_customer_name(global.current_customer);
+	var _customer_satisfaction_line = scr_customer_satisfaction_lines(_scorer.satisfaction);
+    draw_text_transformed(_cx, _sy + _slide,
+        _customer_name + " " + _customer_satisfaction_line, 1, 1, 0);
+
+    if (_scorer.satisfaction >= 100) {
+        draw_text_transformed(_cx, _sy + 34 + _slide, "PERFECT ORDER!", 1, 1, 0);
+    }
+
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+}*/
+
+// --- Excellence bonus banner ---
+if (_scorer.satisfaction >= 0 && _scorer.sat_reveal > 0) {
+	//Bonus Label
+    var _by    = _cy + 380;
+    var _pulse = 1 + sin(current_time / 120) * 0.08;
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_alpha(_scorer.sat_reveal);
+    draw_set_color(make_color_rgb(255, 220, 50));
+    draw_text_transformed(_cx, _by, _scorer.bonus_label, 1.1 * _pulse, 1.1 * _pulse, 0);
+	
+	//Customer Thoughts
+	var _scol;
+	var _sy    = _cy + 330;
+    var _slide = (1 - _scorer.sat_reveal) * 30;
+    if      (_scorer.satisfaction >= 100) _scol = make_color_rgb(90, 255, 120);
+    else if (_scorer.satisfaction >= 60)  _scol = make_color_rgb(255, 210, 90);
+    else                                  _scol = make_color_rgb(255, 90, 90);
+	draw_set_color(_scol);
+	var _customer_name = scr_customer_name(global.current_customer);
+	var _customer_satisfaction_line = scr_customer_satisfaction_lines(_scorer.satisfaction);
+    draw_text_transformed(_cx, _sy + _slide,
+        _customer_name + " " + _customer_satisfaction_line, 1, 1, 0);
+		
+	//Extra Money + Scoops Label
+    draw_set_color(c_white);
+    draw_text_transformed(_cx, _by + 32,
+        "+" + string(_scorer.bonus_scoops) + " SCOOPS   +$" + string(_scorer.bonus_money), 1, 1, 0);
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+}
+
 // Reset
 draw_set_alpha(1);
 draw_set_halign(fa_left);

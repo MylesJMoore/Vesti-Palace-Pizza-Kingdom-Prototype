@@ -15,6 +15,15 @@ show_continue = false;
 rank_wobble = 0;
 rank_flash = 0; // counts down from 1 to 0
 
+//Satisfaction
+satisfaction     = -1;   // -1 = no order evaluated
+sat_bonus_scoops = 0;
+sat_bonus_money  = 0;
+sat_reveal       = 0;    // 0..1 fade/slide-in progress
+bonus_label = "";
+bonus_scoops = 0;
+bonus_money = 0;
+
 // Confetti particles
 confetti = [];
 confetti_active = false;

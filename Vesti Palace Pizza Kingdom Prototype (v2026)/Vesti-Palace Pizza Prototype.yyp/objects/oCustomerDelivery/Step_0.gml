@@ -1,3 +1,6 @@
+//Customer Sprite
+sprite_index = global.current_customer_sprite;
+
 // Customer Idle Bob
 bob_phase += bob_speed;
 y = base_y + sin(bob_phase) * bob_amount;
@@ -38,6 +41,10 @@ if has_pizza {
                     global.current_customer = 0;
                 }
                 
+				//Rotate to the next Customer
+				scr_customer_new()
+				
+				//Go back to the Overworld
                 room_goto(VestiPalace);
             }
         }

@@ -77,6 +77,7 @@ if box_state == "open" && !held {
                 global.pizza_cheese   = pizza.cheese_globs;
                 global.pizza_cook     = pizza.cook_state;
                 global.pizza_toppings = instance_number(oTopping);
+				global.pizza_topping_counts = pizza.topping_counts;   // snapshot per-type counts for scoring
                 global.pizza_ready    = true;
 				
 				//Play SFX

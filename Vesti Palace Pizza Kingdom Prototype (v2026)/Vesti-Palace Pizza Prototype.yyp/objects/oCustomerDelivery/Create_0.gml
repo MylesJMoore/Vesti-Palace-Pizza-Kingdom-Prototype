@@ -1,4 +1,5 @@
 // Drop zone — place in CounterPizzaDelivery
+sprite_index = global.current_customer_sprite;
 depth = -50;
 drop_radius = 420;
 has_pizza = false;

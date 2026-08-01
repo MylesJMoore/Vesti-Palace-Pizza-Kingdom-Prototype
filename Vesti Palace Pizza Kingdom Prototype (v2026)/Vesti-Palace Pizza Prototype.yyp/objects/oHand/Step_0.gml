@@ -215,6 +215,7 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 					    t.ingredient_type = global.active_ingredient;
 					    t.depth = -500 - global.topping_depth; // newest topping always on top
 					    global.topping_depth++;
+						pizza.topping_counts[global.active_ingredient]++;
 						t.squish_timer = 10; 
 					    switch (global.active_ingredient) {
 					        case INGREDIENT.MUSHROOM: t.variant = irandom(1); break;
