@@ -86,6 +86,13 @@ draw_set_halign(fa_right);
 draw_set_color(_grade_col);
 draw_text(_gw - _pad, _below_y - 8, "Last Pizza: " + global.last_rank);
 
+// Day counter — top row, right edge, same baseline as name
+draw_set_font(fnt_dialogue);
+draw_set_halign(fa_right);
+draw_set_valign(fa_top);
+draw_set_color(c_white);
+draw_text(_gw - _pad, _row1_y - 8, "Day " + string(global.day_number));
+
 // --- Objective — centered ---
 var _pulse = 0.7 + sin(current_time / 300) * 0.3;
 draw_set_halign(fa_center);

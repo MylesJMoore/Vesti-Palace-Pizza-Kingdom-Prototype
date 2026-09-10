@@ -1,3 +1,5 @@
+#macro ORDERS_PER_DAY 3
+
 enum PIZZA_COOK {
     UNCOOKED = 0,
     COOKED   = 1,
@@ -44,3 +46,4 @@ enum CUSTOMER_SPRITES {
     spr_mrs_cloud,
     spr_default_npc
 }
+

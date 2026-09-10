@@ -1,4 +1,4 @@
-depth = obj_money_counter.depth - 1;
+depth = -51;
 drop_radius = 150;
 image_xscale = 0.3;
 image_yscale = 0.3;

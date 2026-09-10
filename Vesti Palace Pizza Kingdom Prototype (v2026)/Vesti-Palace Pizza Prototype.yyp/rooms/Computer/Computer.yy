@@ -6,8 +6,6 @@
   "inheritCreationOrder":false,
   "inheritLayers":false,
   "instanceCreationOrder":[
-    {"name":"inst_5B4AEFA6_1","path":"rooms/Computer/Computer.yy",},
-    {"name":"inst_23907896_1","path":"rooms/Computer/Computer.yy",},
     {"name":"inst_5F062ADC","path":"rooms/Computer/Computer.yy",},
     {"name":"inst_4B24C9F2","path":"rooms/Computer/Computer.yy",},
     {"name":"inst_40AF7A8B","path":"rooms/Computer/Computer.yy",},
@@ -17,8 +15,6 @@
   "isDnd":false,
   "layers":[
     {"$GMRInstanceLayer":"","%Name":"Instances","depth":0,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[
-        {"$GMRInstance":"v4","%Name":"inst_5B4AEFA6_1","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":true,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_5B4AEFA6_1","objectId":{"name":"obj_brickwall","path":"objects/obj_brickwall/obj_brickwall.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":0.2,"scaleY":0.21807909,"x":288.0,"y":0.0,},
-        {"$GMRInstance":"v4","%Name":"inst_23907896_1","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":true,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_23907896_1","objectId":{"name":"obj_dialogue_test","path":"objects/obj_dialogue_test/obj_dialogue_test.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":0.3,"scaleY":0.3,"x":320.0,"y":544.0,},
         {"$GMRInstance":"v4","%Name":"inst_5F062ADC","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_5F062ADC","objectId":{"name":"obj_computer_desktop","path":"objects/obj_computer_desktop/obj_computer_desktop.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":0.33694583,"scaleY":0.2756184,"x":0.0,"y":0.0,},
         {"$GMRInstance":"v4","%Name":"inst_4B24C9F2","colour":4294967295,"frozen":false,"hasCreationCode":true,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_4B24C9F2","objectId":{"name":"oWindowPalace","path":"objects/oWindowPalace/oWindowPalace.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":0.2,"scaleY":0.2,"x":544.0,"y":416.0,},
         {"$GMRInstance":"v4","%Name":"inst_40AF7A8B","colour":4294967295,"frozen":false,"hasCreationCode":true,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_40AF7A8B","objectId":{"name":"oWindowPizzaKingdom","path":"objects/oWindowPizzaKingdom/oWindowPizzaKingdom.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":0.2,"scaleY":0.2,"x":866.0,"y":585.0,},

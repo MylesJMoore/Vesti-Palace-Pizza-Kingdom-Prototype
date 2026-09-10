@@ -145,6 +145,16 @@ if show_continue && !rewards_applied {
         global.last_slice_score = slice_score;
         global.last_rank = rank;
         global.pizzas_made++;
+		
+		scr_day_record_delivery({
+		    customer      : global.current_customer,
+		    customer_name : scr_customer_name(global.current_customer),
+		    slice_score   : global.last_slice_score,
+		    satisfaction  : -1,   // wire to your _satisfaction later if you want it on the tally
+		    rank          : global.last_rank,
+		    money         : global.money,
+		    scoops        : global.scoops
+		});
     }
 }
 

@@ -11,7 +11,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"Objects",
-    "path":"folders/Assembly Line/Objects.yy",
+    "path":"folders/[Deprecated]/Assembly Line (V1)/Objects.yy",
   },
   "parentObjectId":null,
   "persistent":false,

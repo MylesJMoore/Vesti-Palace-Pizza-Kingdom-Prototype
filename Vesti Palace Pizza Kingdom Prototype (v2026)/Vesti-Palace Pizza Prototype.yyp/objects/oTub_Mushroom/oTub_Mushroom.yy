@@ -9,7 +9,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"Tubs",
-    "path":"folders/Assembly Line/Objects/Tubs.yy",
+    "path":"folders/[Deprecated]/Assembly Line (V1)/Objects/Tubs.yy",
   },
   "parentObjectId":{
     "name":"oCondimentTub",

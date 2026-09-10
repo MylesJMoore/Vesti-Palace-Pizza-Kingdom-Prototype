@@ -5,7 +5,7 @@ if instance_number(oHUD) > 1 {
 instance_persistent = true;
 
 // Rooms where HUD should NOT show
-hidden_rooms = [MainMenu, Computer]; // swap to your actual room names
+hidden_rooms = [MainMenu, Computer, DayEndTally]; // swap to your actual room names
 
 // Assembly Line Idle Prompts
 idle_prompt = scr_topping_prompt();

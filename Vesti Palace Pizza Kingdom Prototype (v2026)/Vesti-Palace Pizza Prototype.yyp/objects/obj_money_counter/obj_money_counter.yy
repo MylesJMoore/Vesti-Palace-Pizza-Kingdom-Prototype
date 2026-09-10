@@ -8,8 +8,8 @@
   "name":"obj_money_counter",
   "overriddenProperties":[],
   "parent":{
-    "name":"Environment",
-    "path":"folders/Objects/Environment.yy",
+    "name":"[Deprecated]",
+    "path":"folders/[Deprecated].yy",
   },
   "parentObjectId":null,
   "persistent":false,

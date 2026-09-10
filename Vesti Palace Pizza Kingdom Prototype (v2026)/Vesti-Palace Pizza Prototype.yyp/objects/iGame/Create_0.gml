@@ -1,6 +1,9 @@
 //Turn off System Cursor
 window_set_cursor(cr_none);
 
+//Set GUI Size
+display_set_gui_size(1920, 1080);
+
 //Set Default Game Mode as we start in the Main Menu
 global.game_mode = "UI";
 
@@ -59,4 +62,5 @@ global.current_customer_sprite = CUSTOMER_SPRITES.spr_guramahsh;
 global.current_order    = array_create(INGREDIENT.COUNT, 0);
 global.order_revealed = false;
 global.order_served     = false;
-scr_customer_new();   // roll the first real customer + order
+global.day_number = 1;
+scr_day_start();   // resets day counters + rolls the first customer (replaces scr_customer_new)

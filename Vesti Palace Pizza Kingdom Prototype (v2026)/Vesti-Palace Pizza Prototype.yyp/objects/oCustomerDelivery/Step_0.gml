@@ -41,11 +41,14 @@ if has_pizza {
                     global.current_customer = 0;
                 }
                 
-				//Rotate to the next Customer
-				scr_customer_new()
-				
-				//Go back to the Overworld
-                room_goto(VestiPalace);
+				//Check if we finished the Day then rotate to the next Customer
+				if (scr_day_should_close()) {
+				    room_goto(DayEndTally);
+				    // no scr_customer_new() here — scr_day_next() rolls the next day's customer
+				} else {
+				    scr_customer_new();
+				    room_goto(VestiPalace);
+				}
             }
         }
     }
