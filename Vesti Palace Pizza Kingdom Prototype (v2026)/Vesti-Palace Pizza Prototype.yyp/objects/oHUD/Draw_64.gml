@@ -111,9 +111,9 @@ if (room == AssemblyLineV2 || room == CounterCustomer) {
     var _line_h   = 26;
     var _header_h = 34;
 
-    if (!global.order_revealed) {
+    if (!global.order_revealed && !global.pizza_ready) {
         // Hidden until the player talks to the customer
-        var _hint = "Talk to the customer for their order!";
+        var _hint = "Talk to the customer for their order! Or don't!";
         var _pw = string_width(_hint) + _text_pad * 2;
         var _ph = _header_h + _line_h + 12;
         draw_set_color(make_color_rgb(250, 248, 240));
@@ -128,6 +128,26 @@ if (room == AssemblyLineV2 || room == CounterCustomer) {
         draw_set_color(make_color_rgb(180, 60, 60));
         draw_rectangle(_px, _py, _px + _pw, _py + _ph, true);
         draw_set_halign(fa_left); draw_set_valign(fa_top); draw_set_color(c_white);
+    } else if (global.pizza_ready) {
+        // Sealed and boxed — order details no longer matter, just point them to delivery
+        var _msg = "Time to deliver the pizza!";
+        var _pw = string_width(_msg) + _text_pad * 2;
+        var _ph = _header_h + _line_h + 12;
+
+        // Paper + header (green header to read as "done" vs the red order ticket)
+        draw_set_color(make_color_rgb(250, 248, 240));
+        draw_rectangle(_px, _py, _px + _pw, _py + _ph, false);
+        draw_set_color(make_color_rgb(60, 160, 60));
+        draw_rectangle(_px, _py, _px + _pw, _py + _header_h, false);
+        draw_set_color(c_white);
+        draw_set_halign(fa_left); draw_set_valign(fa_middle);
+        draw_text(_px + _text_pad, _py + _header_h * 0.5, "ORDER  -  DONE!");
+        draw_set_color(make_color_rgb(40, 140, 40));
+        draw_text(_px + _text_pad, _py + _header_h + _line_h * 0.5, _msg);
+        draw_set_color(make_color_rgb(70, 170, 70));
+        draw_rectangle(_px, _py, _px + _pw, _py + _ph, true);
+        draw_set_halign(fa_left); draw_set_valign(fa_top); draw_set_color(c_white);
+
     } else {
         var _pz   = (room == AssemblyLineV2) ? instance_find(oPizzaV2, 0) : noone;
         var _live = (_pz != noone && instance_exists(_pz));

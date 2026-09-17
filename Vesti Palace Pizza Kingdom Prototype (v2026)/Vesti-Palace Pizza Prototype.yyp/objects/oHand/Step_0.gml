@@ -161,6 +161,16 @@ if (mouse_check_button_released(mb_left)) {
 // --------------------------------------------------
 if (global.hand_mode == HAND_MODE.PAINT) {
     var pizza = instance_position(x, y, oPizzaV2);
+	
+	// Sealed in the box? No painting, no toppings. Kill any paint loop, then fall through.
+    if (pizza != noone && PizzaIsSealed(pizza)) {
+        if (paint_loop_snd != noone && audio_is_playing(paint_loop_snd)) {
+            audio_stop_sound(paint_loop_snd);
+            paint_loop_snd = noone;
+        }
+        pizza = noone;   // makes the existing "if (pizza != noone)" block below skip everything
+    }
+	
     if (pizza != noone) {
 
         // Discrete toppings — one per click
@@ -191,6 +201,8 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 		                case INGREDIENT.PEPPERONI: limit = pizza.max_pepperoni; break;
 		                case INGREDIENT.MUSHROOM:  limit = pizza.max_mushroom;  break;
 		                case INGREDIENT.GLASS:     limit = pizza.max_glass;     break;
+		                case INGREDIENT.EYEBALLS:  limit = pizza.max_eyeballs;  break;
+		                case INGREDIENT.TEETH:     limit = pizza.max_teeth;     break;
 		            }
 					
 					var _cost = scr_topping_cost(global.active_ingredient);
@@ -205,6 +217,8 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 			                case INGREDIENT.PEPPERONI: sfx_play(snd_sfx_topping_pepperoni, true, 0.8); break;
 			                case INGREDIENT.MUSHROOM:  sfx_play(snd_sfx_topping_mushroom, true, 0.8);  break;
 			                case INGREDIENT.GLASS:     sfx_play(snd_sfx_topping_glass, true, 0.8);     break;
+							case INGREDIENT.EYEBALLS: sfx_play(snd_sfx_topping_pepperoni, true, 0.6); break;
+							case INGREDIENT.TEETH: sfx_play(snd_sfx_topping_mushroom, true, 0.5); break;
 			            }
 						
 						//Create Topping
@@ -220,6 +234,8 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 					    switch (global.active_ingredient) {
 					        case INGREDIENT.MUSHROOM: t.variant = irandom(1); break;
 					        case INGREDIENT.GLASS:    t.variant = irandom(7); break;
+							case INGREDIENT.EYEBALLS: t.variant = irandom(7); break;
+							case INGREDIENT.TEETH:    t.variant = irandom(7); break;
 					        default: t.variant = 0; break;
 					    }
 						
@@ -229,6 +245,8 @@ if (global.hand_mode == HAND_MODE.PAINT) {
 					        case INGREDIENT.PEPPERONI: _topping_col = make_color_rgb(180, 30, 30);  break; // dark red
 					        case INGREDIENT.MUSHROOM:  _topping_col = make_color_rgb(100, 200, 120); break; // green
 					        case INGREDIENT.GLASS:     _topping_col = make_color_rgb(80, 150, 255);  break; // blue
+							case INGREDIENT.EYEBALLS:  _topping_col = make_color_rgb(230, 240, 235); break; // pale wet white
+					        case INGREDIENT.TEETH:     _topping_col = make_color_rgb(240, 230, 200); break; // bone cream
 					    }
 						
 						//TOPPING SPLAT CREATION

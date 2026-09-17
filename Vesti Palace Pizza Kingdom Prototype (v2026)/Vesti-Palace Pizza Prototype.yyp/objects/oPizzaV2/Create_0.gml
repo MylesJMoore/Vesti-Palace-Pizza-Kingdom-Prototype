@@ -32,6 +32,8 @@ topping_counts = array_create(INGREDIENT.COUNT, 0);
 max_pepperoni = 99;
 max_mushroom  = 99;
 max_glass     = 99;
+max_eyeballs  = 99;
+max_teeth     = 99;
 
 // Glob stamp timer
 glob_timer = 0;

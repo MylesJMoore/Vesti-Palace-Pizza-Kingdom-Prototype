@@ -149,5 +149,5 @@ function scr_order_lines(_order) {
 /// @function scr_orderable_ingredients()
 /// @description The toppings that can be ordered/graded. Add additional ones here later.
 function scr_orderable_ingredients() {
-    return [INGREDIENT.PEPPERONI, INGREDIENT.MUSHROOM, INGREDIENT.GLASS];
+    return [INGREDIENT.PEPPERONI, INGREDIENT.MUSHROOM, INGREDIENT.GLASS, INGREDIENT.EYEBALLS, INGREDIENT.TEETH];
 }

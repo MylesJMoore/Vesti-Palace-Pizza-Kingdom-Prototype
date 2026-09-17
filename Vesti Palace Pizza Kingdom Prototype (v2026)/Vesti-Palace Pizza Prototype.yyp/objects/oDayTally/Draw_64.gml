@@ -42,7 +42,7 @@ if (coins_banked > 0) {
     array_push(_summary, { text: "(deliveries $" + string(total_money) + " + banked $" + string(coins_banked) + ")", col: _ink });
 }
 array_push(_summary, { text: "SCOOPS earned: " + string(_shown_scoops), col: _yellow });
-array_push(_summary, { text: "Avg quality: " + string(round(avg_score)), col: _blue });
+array_push(_summary, { text: "Avg quality: " + avg_score_letter, col: avg_score_color });
 
 var _prompt = anim_done ? ("Click to start Day " + string(day_num + 1)) : "Click to skip...";
 

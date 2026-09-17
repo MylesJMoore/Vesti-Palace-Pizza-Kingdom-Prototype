@@ -8,6 +8,8 @@ function scr_topping_name(_id) {
         case INGREDIENT.PEPPERONI:  return "Pepperoni";
         case INGREDIENT.MUSHROOM:   return "Mushroom";
         case INGREDIENT.GLASS:      return "Glass Shard";
+		case INGREDIENT.EYEBALLS:   return "Eyeballs";
+		case INGREDIENT.TEETH:      return "Teeth";
         default:				    return noone;
     }
 }
@@ -16,14 +18,16 @@ function scr_topping_name(_id) {
 /// @description Small HUD icon.
 function scr_topping_icon(_id) {
     switch (_id) {
-        case INGREDIENT.NONE:		return noone;
-		case INGREDIENT.SAUCE:		return spr_sauce_brush;
-		case INGREDIENT.SPECIALSAUCE:		return spr_specialsauce_brush;
-        case INGREDIENT.CHEESE:		return spr_cheese_brush;
-        case INGREDIENT.PEPPERONI:  return spr_pepperoni_brush;
-        case INGREDIENT.MUSHROOM:   return spr_mushroom_brush;
-        case INGREDIENT.GLASS:      return spr_glass_brush;
-        default:				    return noone;
+        case INGREDIENT.NONE:		  return noone;
+		case INGREDIENT.SAUCE:		  return spr_sauce_brush;
+		case INGREDIENT.SPECIALSAUCE: return spr_specialsauce_brush;
+        case INGREDIENT.CHEESE:		  return spr_cheese_brush;
+        case INGREDIENT.PEPPERONI:    return spr_pepperoni_brush;
+        case INGREDIENT.MUSHROOM:     return spr_mushroom_brush;
+        case INGREDIENT.GLASS:        return spr_glass_brush;
+		case INGREDIENT.EYEBALLS:     return spr_eyeball_brush;
+		case INGREDIENT.TEETH:        return spr_teeth_brush;
+        default:				      return noone;
     }
 }
 
@@ -31,13 +35,15 @@ function scr_topping_icon(_id) {
 /// @description Text color per topping for HUD + labels.
 function scr_topping_color(_id) {
     switch (_id) {
-        case INGREDIENT.SAUCE:      return make_color_rgb(230, 60, 50);    // red
-		case INGREDIENT.SPECIALSAUCE:      return make_color_rgb(110, 220, 110);    // green
-        case INGREDIENT.CHEESE:     return make_color_rgb(255, 210, 60);   // yellow
-        case INGREDIENT.PEPPERONI:  return make_color_rgb(255, 140, 30);   // orange
-        case INGREDIENT.MUSHROOM:   return make_color_rgb(110, 220, 110);  // green
-        case INGREDIENT.GLASS:      return make_color_rgb(140, 210, 255);  // light blue
-        default:                    return c_white;
+        case INGREDIENT.SAUCE:        return make_color_rgb(230, 60, 50);    // red
+		case INGREDIENT.SPECIALSAUCE: return make_color_rgb(110, 220, 110);  // green
+        case INGREDIENT.CHEESE:       return make_color_rgb(255, 210, 60);   // yellow
+        case INGREDIENT.PEPPERONI:    return make_color_rgb(255, 140, 30);   // orange
+        case INGREDIENT.MUSHROOM:     return make_color_rgb(110, 220, 110);  // green
+        case INGREDIENT.GLASS:        return make_color_rgb(140, 210, 255);  // light blue
+		case INGREDIENT.EYEBALLS:     return make_color_rgb(230, 240, 235);  // pale wet white
+		case INGREDIENT.TEETH:        return make_color_rgb(240, 230, 200);  // bone cream
+        default:                      return c_white;
     }
 }
 
@@ -62,13 +68,15 @@ function scr_topping_prompt() {
 /// @function scr_topping_cost(id)
 function scr_topping_cost(_id) {
     switch (_id) {
-        case INGREDIENT.SAUCE:      return 0;    // base layers free
-		case INGREDIENT.SPECIALSAUCE:      return 0;
-        case INGREDIENT.CHEESE:     return 0;	 // base layers free
-        case INGREDIENT.PEPPERONI:  return 1;
-        case INGREDIENT.MUSHROOM:   return 2;
-        case INGREDIENT.GLASS:      return 5;
-        default:                    return 0;
+        case INGREDIENT.SAUCE:        return 0;    // base layers free
+		case INGREDIENT.SPECIALSAUCE: return 0;
+        case INGREDIENT.CHEESE:       return 0;	 // base layers free
+        case INGREDIENT.PEPPERONI:    return 1;
+        case INGREDIENT.MUSHROOM:     return 2;
+        case INGREDIENT.GLASS:        return 5;
+		case INGREDIENT.EYEBALLS:     return 10;
+		case INGREDIENT.TEETH:        return 7;
+        default:                      return 0;
     }
 }
 

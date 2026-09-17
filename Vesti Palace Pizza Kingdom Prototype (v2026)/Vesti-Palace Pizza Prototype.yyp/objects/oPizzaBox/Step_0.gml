@@ -44,6 +44,7 @@ if box_state == "open" && !held {
 
         if !pizza.held {
             if dx*dx + dy*dy < snap_radius * snap_radius {
+				/*
                 pizza.x = x;
                 pizza.y = y;
                 pizza.vx = 0;
@@ -51,6 +52,7 @@ if box_state == "open" && !held {
                 pizza_ref = pizza;
                 pizza.can_be_picked_up = false;
                 pizza.can_be_clicked = false;
+				pizza.is_locked = true;   // NEW: seals it — paint/toppings/cook now refuse
 
                 box_state = "closed";
                 sprite_index = spr_pizza_box_closed;
@@ -58,6 +60,8 @@ if box_state == "open" && !held {
                 can_be_picked_up = true;
                 can_be_clicked = false;
                 screen_shake(6, 12);
+				*/
+				PizzaBoxSeal(id, pizza);
 
                 repeat(20) {
                     var _angle2 = random(360);

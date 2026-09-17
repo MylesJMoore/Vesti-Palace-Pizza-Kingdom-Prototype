@@ -9,6 +9,8 @@ on_clicked = function(self_ref) {
     var pizza = instance_find(oPizzaV2, 0);
     if (!instance_exists(pizza)) exit;
 	
+	if (PizzaIsSealed(pizza)) exit;   // NEW: can't cook a boxed pizza
+	
 	//Play SFX
 	sfx_play(snd_sfx_cook, false, 1);
 	
